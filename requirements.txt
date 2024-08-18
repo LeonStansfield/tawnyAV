@@ -1,0 +1,10 @@
+numpy
+scipy
+sounddevice
+pygame
+
+pyaudio
+librosa
+numpy
+pillow
+tk
