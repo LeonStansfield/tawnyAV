@@ -9,8 +9,8 @@ dA = 0.07
 dB = 0.13
 feed = 0.055
 kill = 0.062
-grid_size = (200, 200)
-screen_size = (800, 800)
+grid_size = (240, 180)
+screen_size = (960, 720)
 pre_simulation_steps = np.random.randint(0, 100)
 image_path = 'resources/wyr_image.png'  # Update this path to your image file
 

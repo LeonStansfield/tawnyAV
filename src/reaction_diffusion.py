@@ -1,3 +1,5 @@
+import os
+import threading
 import numpy as np
 from PIL import Image
 import pygame
@@ -50,12 +52,44 @@ class ReactionDiffusion:
         return self.palette[index]
 
     def draw(self, screen, screen_size):
+        def process_chunk(start_row, end_row, color_grid, C):
+            for i in range(start_row, end_row):
+                for j in range(self.grid_size[1]):
+                    color_grid[i, j] = self.map_to_palette(C[i, j] / 255.0)
+
         C = (self.A - self.B) * 255
         C = np.clip(C, 0, 255).astype(np.uint8)
         color_grid = np.zeros((self.grid_size[0], self.grid_size[1], 3), dtype=np.uint8)
-        for i in range(self.grid_size[0]):
-            for j in range(self.grid_size[1]):
-                color_grid[i, j] = self.map_to_palette(C[i, j] / 255.0)
+        
+        num_threads = os.cpu_count()
+
+        chunk_size = self.grid_size[0] // num_threads
+        threads = []
+
+        for i in range(num_threads):
+            start_row = i * chunk_size
+            end_row = (i + 1) * chunk_size if i != num_threads - 1 else self.grid_size[0]
+            thread = threading.Thread(target=process_chunk, args=(start_row, end_row, color_grid, C))
+            threads.append(thread)
+            thread.start()
+
+        for thread in threads:
+            thread.join()
+
         surface = pygame.surfarray.make_surface(color_grid)
-        surface = pygame.transform.scale(surface, screen_size)
-        screen.blit(surface, (0, 0))
+        
+        # Calculate scaling factor to maintain aspect ratio
+        scale_factor = screen_size[1] / self.grid_size[1]
+        new_width = int(self.grid_size[0] * scale_factor)
+        
+        # Scale the surface
+        scaled_surface = pygame.transform.scale(surface, (new_width, screen_size[1]))
+        
+        # Calculate position to center the surface
+        x_offset = (screen_size[0] - new_width) // 2
+        
+        # Fill the screen with black
+        screen.fill((0, 0, 0))
+        
+        # Blit the scaled surface onto the screen
+        screen.blit(scaled_surface, (x_offset, 0))

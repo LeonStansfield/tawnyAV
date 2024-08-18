@@ -1,10 +1,6 @@
 numpy
 scipy
-sounddevice
 pygame
-
 pyaudio
-librosa
-numpy
 pillow
-tk
+cupy-cuda11x

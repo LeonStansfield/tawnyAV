@@ -4,6 +4,7 @@ import numpy as np
 class GUI:
     def __init__(self, screen_size):
         pygame.init()
+        self.original_screen_size = screen_size
         self.screen_size = screen_size
         self.screen = pygame.display.set_mode(self.screen_size)
         pygame.display.set_caption("Audio Visualizer with Reaction-Diffusion")
@@ -12,10 +13,10 @@ class GUI:
         self.show_waveform = True
         self.selected_slider = None
         self.sliders = {
-            "THRESHOLD_MULTIPLIER": {"value": 2.0, "min": 0.5, "max": 5.0, "rect": pygame.Rect(300, 750, 200, 20)},
-            "COOLDOWN_TIME": {"value": 0.3, "min": 0.1, "max": 1.0, "rect": pygame.Rect(550, 750, 200, 20)},
+            "THRESHOLD_MULTIPLIER": {"value": 2.0, "min": 0.5, "max": 5.0, "rect": pygame.Rect(40, 40, 200, 20)},
+            "COOLDOWN_TIME": {"value": 0.3, "min": 0.1, "max": 1.0, "rect": pygame.Rect(300, 40, 200, 20)},
         }
-        self.button_rect = pygame.Rect((screen_size[0] - 150) // 2, 660, 150, 40)
+        self.button_rect = pygame.Rect(40, 80, 150, 20)
 
     def handle_events(self, audio_processor, reaction_diffusion, image_path):
         for event in pygame.event.get():
@@ -23,11 +24,7 @@ class GUI:
                 return False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_F11:
-                    self.is_fullscreen = not self.is_fullscreen
-                    if self.is_fullscreen:
-                        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-                    else:
-                        self.screen = pygame.display.set_mode(self.screen_size)
+                    self.toggle_fullscreen()
             self.handle_sliders(event)
             self.handle_button(event)
         
@@ -39,6 +36,15 @@ class GUI:
                 reaction_diffusion.update()
         
         return True
+
+    def toggle_fullscreen(self):
+        self.is_fullscreen = not self.is_fullscreen
+        if self.is_fullscreen:
+            self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+            self.screen_size = self.screen.get_size()
+        else:
+            self.screen = pygame.display.set_mode(self.original_screen_size)
+            self.screen_size = self.original_screen_size
 
     def handle_sliders(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -75,9 +81,9 @@ class GUI:
     def draw_waveform(self, data):
         samples = np.frombuffer(data, dtype=np.int16)
         samples = samples / 32768.0
-        waveform_height = self.screen_size[0] // 2
+        waveform_height = self.screen_size[1] // 2
         samples = samples * waveform_height
-        x_scale = self.screen_size[1] / len(samples)
+        x_scale = self.screen_size[0] / len(samples)
         points = [(x * x_scale, waveform_height + samples[x]) for x in range(len(samples))]
         pygame.draw.lines(self.screen, (255, 255, 255), False, points)
 
