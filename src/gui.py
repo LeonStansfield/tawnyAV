@@ -1,11 +1,13 @@
 import pygame
 import numpy as np
+import time
 
 class GUI:
     def __init__(self, screen_size):
         pygame.init()
         self.original_screen_size = screen_size
         self.screen_size = screen_size
+        self.last_update_time = time.time()
         self.screen = pygame.display.set_mode(self.screen_size)
         pygame.display.set_caption("Audio Visualizer with Reaction-Diffusion")
         self.clock = pygame.time.Clock()
@@ -29,11 +31,13 @@ class GUI:
             self.handle_button(event)
         
         data = audio_processor.read_data()
-        if audio_processor.detect_beat(data, self.sliders["THRESHOLD_MULTIPLIER"]["value"], self.sliders["COOLDOWN_TIME"]["value"]):
+        current_time = time.time()
+        if audio_processor.detect_beat(data, self.sliders["THRESHOLD_MULTIPLIER"]["value"], self.sliders["COOLDOWN_TIME"]["value"]) or (current_time - self.last_update_time > 16):
             pre_simulation_steps = np.random.randint(0, 100)
             reaction_diffusion.A, reaction_diffusion.B = reaction_diffusion.initialize_grids(image_path)
             for _ in range(pre_simulation_steps):
                 reaction_diffusion.update()
+            self.last_update_time = current_time
         
         return True
 
