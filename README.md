@@ -5,21 +5,11 @@ Tawny AV is a python based audio visual software to display dynamic visualizatio
 
 
 ## Installation
-1. Ensure you have the latest version of python installed on your system. You can download the latest version of python from the official website [here](https://www.python.org/downloads/).
+1. Ensure the latest version of Python is installed on your system. You can download the latest version of Python from the official website: https://www.python.org/downloads/
 
 2. Clone the repository:
     ```sh
     git clone https://github.com/LeonStansfield/tawnyAV.git
     ```
 
-3. Navigate to the project directory:
-    ```sh
-    cd your-repo-name
-    ```
-
-4. Install dependencies:
-    Run the setup script for your operating system to setup the virtual environment and install the required dependencies. (EG: `setup_linux_mac.sh` for linux)
-
-    ```sh
-
-## Usage
+3. Run the correct program for your operating system. If the virtual environment isnt already created, it will set this up along with the dependencies. EG run_linux_mac.sh or run_windows.bat

@@ -3,4 +3,3 @@ scipy
 pygame
 pyaudio
 pillow
-cupy-cuda11x
