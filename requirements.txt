@@ -1,6 +1,8 @@
 numpy
 scipy
-pygame
 pyaudio
 pillow
+pygame
 pygame_gui
+pygame_shaders
+moderngl
