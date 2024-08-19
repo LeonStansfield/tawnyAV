@@ -3,14 +3,14 @@ import pygame_gui
 import numpy as np
 import time
 
-class GUI:
+class Render:
     def __init__(self, screen_size, scenes):
         pygame.init()
         self.original_screen_size = screen_size
         self.screen_size = screen_size
         self.last_update_time = time.time()
         self.screen = pygame.display.set_mode(self.screen_size)
-        pygame.display.set_caption("Audio Visualizer with Reaction-Diffusion")
+        pygame.display.set_caption("Audio Visualizer")
         self.clock = pygame.time.Clock()
         self.is_fullscreen = False
         self.show_ui = True  # Flag to track UI visibility
@@ -51,7 +51,7 @@ class GUI:
             manager=self.manager
         )
 
-    def handle_events(self, audio_processor, reaction_diffusion, image_path):
+    def handle_events(self, audio_processor):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
@@ -72,10 +72,10 @@ class GUI:
         data = audio_processor.read_data()
         current_time = time.time()
         if audio_processor.detect_beat(data, self.threshold_slider.get_current_value(), self.cooldown_slider.get_current_value()) or (current_time - self.last_update_time > 16):
-            pre_simulation_steps = np.random.randint(0, 100)
-            reaction_diffusion.A, reaction_diffusion.B = reaction_diffusion.initialize_grids(image_path)
-            for _ in range(pre_simulation_steps):
-                reaction_diffusion.update()
+            # Send signal to all scenes
+            for scene in self.scenes:
+                scene.handle_beat()
+            
             self.last_update_time = current_time
         
         return True

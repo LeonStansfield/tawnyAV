@@ -11,6 +11,12 @@ class ReactionDiffusionScene(Scene):
     def draw(self, screen, data):
         self.reaction_diffusion.update()
         self.reaction_diffusion.draw(screen, screen.get_size())
+    
+    def handle_beat(self):
+        pre_simulation_steps = np.random.randint(0, 100)
+        self.reaction_diffusion.A, self.reaction_diffusion.B = self.reaction_diffusion.initialize_grids(self.reaction_diffusion.image_path)
+        for _ in range(pre_simulation_steps):
+            self.reaction_diffusion.update()
 
 class ReactionDiffusion:
     def __init__(self, grid_size, dA, dB, feed, kill, image_path):
@@ -19,7 +25,8 @@ class ReactionDiffusion:
         self.dB = dB
         self.feed = feed
         self.kill = kill
-        self.A, self.B = self.initialize_grids(image_path)
+        self.image_path = image_path
+        self.A, self.B = self.initialize_grids(self.image_path)
         self.palette = self.define_palette()
 
     def initialize_grids(self, image_path):
