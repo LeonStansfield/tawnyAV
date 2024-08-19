@@ -1,6 +1,7 @@
 numpy
 scipy
-pygame
 pyaudio
 pillow
-pygame_gui
+pygame==2.5.0
+pygame_gui==0.6.9
+PyOpenGL

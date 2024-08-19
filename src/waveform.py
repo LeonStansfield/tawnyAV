@@ -14,3 +14,6 @@ class WaveformScene(Scene):
         x_scale = screen.get_width() / len(samples)
         points = [(x * x_scale, waveform_height + samples[x]) for x in range(len(samples))]
         pygame.draw.lines(screen, (255, 255, 255), False, points)
+
+    def handle_beat(self):
+        pass
