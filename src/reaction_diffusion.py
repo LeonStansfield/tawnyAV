@@ -1,6 +1,16 @@
 import numpy as np
 from PIL import Image
 import pygame
+from .scene import Scene
+
+class ReactionDiffusionScene(Scene):
+    def __init__(self, reaction_diffusion, name):
+        self.name = name
+        self.reaction_diffusion = reaction_diffusion
+
+    def draw(self, screen, data):
+        self.reaction_diffusion.update()
+        self.reaction_diffusion.draw(screen, screen.get_size())
 
 class ReactionDiffusion:
     def __init__(self, grid_size, dA, dB, feed, kill, image_path):

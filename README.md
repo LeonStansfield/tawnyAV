@@ -16,5 +16,4 @@ Tawny AV is a python based audio visual software to display dynamic visualizatio
 
 ## Todo
  - I would like to modify TawnyAV to use GPU based shaders instead of CPU based visuals. This will essentially turn TawnyAV into a audio reactive shader toy - meaning it could support a large range of visuals, similar to those found on www.shadertoy.com
- - I would like to replace the current GUI with something better such as a proper pygame GUI - ThorPy for example. The user should also be able to modify variables without using a GUI so as to not interrupt the visuals.
  - I would like to be able to support many visuals being loaded and switched between in run time. I think this would require a refactor of the overall architecture to make audio processing independent from the visuals. The visuals can then be instantiated 'scene' objects which can be switched between in real time. 'Scene' objects can recieve a 'signal' when the audio processor detects a beat, indicating them to complete an action.
