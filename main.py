@@ -7,6 +7,7 @@ import time
 from src.audio_processing import AudioProcessor
 from src.waveform import WaveformScene
 from src.reaction_diffusion import ReactionDiffusion, ReactionDiffusionScene
+from src.cellular_automata import CellularAutomata, CellularAutomataScene
 
 # Constants
 dA = 0.07
@@ -72,7 +73,8 @@ def main():
     # Create scenes
     waveform_scene = WaveformScene("Waveform")
     reaction_diffusion_scene = ReactionDiffusionScene(ReactionDiffusion(grid_size, dA, dB, feed, kill, image_path), "Reaction-Diffusion")
-    scenes = [waveform_scene, reaction_diffusion_scene]
+    cellular_automata_scene = CellularAutomataScene(CellularAutomata(grid_size, image_path), "Cellular Automata")
+    scenes = [waveform_scene, reaction_diffusion_scene, cellular_automata_scene]
 
     # Create scene_dropdown
     scene_dropdown = pygame_gui.elements.UIDropDownMenu(
