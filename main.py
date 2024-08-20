@@ -5,7 +5,6 @@ import numpy as np
 import time
 
 from src.audio_processing import AudioProcessor
-from src.shader_test import ShaderTest, ShaderTestScene
 from src.waveform import WaveformScene
 from src.reaction_diffusion import ReactionDiffusion, ReactionDiffusionScene
 
@@ -17,12 +16,6 @@ kill = 0.062
 grid_size = (240, 180)
 screen_size = (960, 720)
 image_path = 'resources/wyr_image.png'  # Update this path to your image file
-
-def setup_pygame():
-    pygame.init()
-    screen = pygame.display.set_mode(screen_size) #, DOUBLEBUF | OPENGL)
-    pygame.display.set_caption("Audio Visualizer")
-    return screen, pygame.time.Clock(), pygame_gui.UIManager(screen_size)
 
 def create_gui_elements(manager):
     threshold_label = pygame_gui.elements.UILabel(
@@ -69,14 +62,17 @@ def handle_events(manager, scene_dropdown, scenes, current_scene, is_fullscreen,
     return True, current_scene, is_fullscreen, show_ui
 
 def main():
-    screen, clock, manager = setup_pygame()
+    pygame.init()
+    screen = pygame.display.set_mode(screen_size)
+    pygame.display.set_caption("Audio Visualizer")
+    clock = pygame.time.Clock()
+    manager = pygame_gui.UIManager(screen_size)
     threshold_slider, cooldown_slider = create_gui_elements(manager)
 
     # Create scenes
     waveform_scene = WaveformScene("Waveform")
     reaction_diffusion_scene = ReactionDiffusionScene(ReactionDiffusion(grid_size, dA, dB, feed, kill, image_path), "Reaction-Diffusion")
-    # shader_test_scene = ShaderTestScene(ShaderTest('shaders/shader_test/vertex.glsl', 'shaders/shader_test/fragment.glsl'), "Shader Test")
-    scenes = [waveform_scene, reaction_diffusion_scene]# , shader_test_scene]
+    scenes = [waveform_scene, reaction_diffusion_scene]
 
     # Create scene_dropdown
     scene_dropdown = pygame_gui.elements.UIDropDownMenu(
