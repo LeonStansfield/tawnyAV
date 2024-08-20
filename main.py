@@ -111,7 +111,7 @@ def main():
                 manager.draw_ui(screen)
             pygame.display.flip()
 
-            clock.tick(20)
+            clock.tick(30)
     finally:
         pygame.quit()
         audio_processor.close()
