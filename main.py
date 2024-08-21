@@ -78,6 +78,10 @@ def main():
     manager = pygame_gui.UIManager(screen_size)
     threshold_slider, cooldown_slider = create_gui_elements(manager)
 
+    # Initialize font
+    pygame.font.init()
+    font = pygame.font.SysFont('Arial', 18)
+
     # Create scenes
     waveform_scene = WaveformScene("Waveform")
 
@@ -122,6 +126,12 @@ def main():
             if show_ui:
                 manager.update(clock.tick(60) / 1000.0)
                 manager.draw_ui(screen)
+
+            # Calculate and draw FPS
+            fps = clock.get_fps()
+            fps_text = font.render(f"FPS: {fps:.2f}", True, pygame.Color('white'))
+            screen.blit(fps_text, (10, 10))
+
             pygame.display.flip()
 
             clock.tick(30)

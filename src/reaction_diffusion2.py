@@ -1,8 +1,6 @@
-import threading
 import numpy as np
 from PIL import Image
 import pygame
-from scipy.signal import convolve2d
 from scipy.ndimage import gaussian_filter
 from .scene import Scene
 
@@ -20,6 +18,7 @@ class ReactionDiffusionScene2(Scene):
         self.reaction_diffusion.u, self.reaction_diffusion.v = self.reaction_diffusion.initialize_grids(self.reaction_diffusion.image_path)
         for _ in range(pre_simulation_steps):
             self.reaction_diffusion.update()
+
 
 class ReactionDiffusion2:
     def __init__(self, grid_size, dU, dV, epsilon, gamma, I, image_path):
@@ -40,10 +39,8 @@ class ReactionDiffusion2:
         u = np.ones(self.grid_size, dtype=np.float32)
         v = np.zeros(self.grid_size, dtype=np.float32)
         
-        # Set pixels from the image to 1.0 in v
         v[img_array < 1.0] = 1.0
         
-        # Add random noise
         noise = np.random.rand(*self.grid_size) < 0.02
         v[noise] = 0.5
         
@@ -64,56 +61,30 @@ class ReactionDiffusion2:
         self.v = np.clip(self.v + self.dV * lapV + self.epsilon * (self.u - self.gamma * self.v), 0, 1)
 
     def define_palette(self):
-        return [(0, 0, 0), (3, 8, 10), (7, 16, 20), (11, 24, 30), (15, 33, 40), (19, 41, 50), (23, 49, 60), (27, 58, 70), (31, 66, 80), (35, 74, 90), (39, 83, 100), (43, 91, 110), (47, 99, 120), (51, 108, 130), (55, 116, 140), (59, 124, 150), (63, 133, 160), (67, 141, 170), (71, 149, 180), (75, 158, 191), (72, 153, 187), (69, 148, 183), (66, 144, 179), (63, 139, 175), (61, 135, 171), (58, 130, 167), (55, 125, 163), (52, 121, 159), (49, 116, 155), (47, 112, 151), (44, 107, 147), (41, 103, 143), (38, 98, 139), (35, 93, 135), (33, 89, 131), (30, 84, 127), (27, 80, 123), (24, 75, 119), (22, 71, 115), (28, 70, 119), (34, 70, 123), (40, 70, 127), (47, 69, 131), (53, 69, 135), (59, 69, 139), (65, 68, 143), (72, 68, 147), (78, 68, 151), (84, 67, 155), (90, 67, 159), (97, 67, 163), (103, 66, 167), (109, 66, 171), (115, 66, 175), (122, 65, 179), (128, 65, 183), (134, 65, 187), (141, 65, 191), (146, 67, 190), (151, 69, 190), (156, 71, 189), (162, 74, 189), (167, 76, 188), (172, 78, 188), (178, 81, 187), (183, 83, 187), (188, 85, 186), (194, 88, 186), (199, 90, 185), (204, 92, 185), (210, 95, 184), (215, 97, 184), (220, 99, 183), (226, 102, 183), (231, 104, 182), (236, 106, 182), (242, 109, 182), (240, 106, 176), (239, 104, 171), (238, 102, 165), (236, 100, 160), (235, 97, 155), (234, 95, 149), (232, 93, 144), (231, 91, 139), (230, 89, 133), (228, 86, 128), (227, 84, 122), (226, 82, 117), (224, 80, 112), (223, 78, 106), (222, 75, 101), (220, 73, 96), (219, 71, 90), (218, 69, 85), (217, 67, 80)]
-
-    def map_to_palette(self, value):
-        index = int(value * (len(self.palette) - 1))
-        return self.palette[index]
+        return [(255, 255, 255), (252, 243, 244), (250, 231, 233), (247, 219, 222), (245, 208, 211), (243, 196, 200), (240, 184, 189), (238, 172, 178), (236, 161, 167), (233, 149, 156), (231, 137, 145), (228, 125, 134), (226, 114, 123), (224, 102, 112), (221, 90, 101), (219, 78, 90), (217, 67, 80), (218, 69, 86), (220, 72, 92), (221, 74, 99), (223, 77, 105), (224, 80, 111), (226, 82, 118), (227, 85, 124), (229, 88, 131), (231, 90, 137), (232, 93, 143), (234, 95, 150), (235, 98, 156), (237, 101, 162), (238, 103, 169), (240, 106, 175), (242, 109, 182), (235, 106, 182), (229, 103, 183), (223, 100, 183), (216, 98, 184), (210, 95, 184), (204, 92, 185), (197, 89, 185), (191, 87, 186), (185, 84, 187), (178, 81, 187), (172, 78, 188), (166, 76, 188), (159, 73, 189), (153, 70, 189), (147, 67, 190), (141, 65, 191), (133, 65, 186), (126, 65, 181), (118, 66, 176), (111, 66, 172), (103, 66, 167), (96, 67, 162), (88, 67, 157), (81, 68, 153), (74, 68, 148), (66, 68, 143), (59, 69, 138), (51, 69, 134), (44, 69, 129), (36, 70, 124), (29, 70, 119), (22, 71, 115), (25, 76, 119), (28, 81, 124), (31, 87, 129), (35, 92, 134), (38, 98, 138), (41, 103, 143), (45, 109, 148), (48, 114, 153), (51, 119, 157), (55, 125, 162), (58, 130, 167), (61, 136, 172), (65, 141, 176), (68, 147, 181), (71, 152, 186), (75, 158, 191), (70, 148, 179), (65, 138, 167), (60, 128, 155), (56, 118, 143), (51, 108, 131), (46, 98, 119), (42, 88, 107), (37, 79, 95), (32, 69, 83), (28, 59, 71), (23, 49, 59), (18, 39, 47), (14, 29, 35), (9, 19, 23), (4, 9, 11), (0, 0, 0)]
 
     def draw(self, screen, screen_size):
-        def process_chunk(start_row, end_row, color_grid, C):
-            for i in range(start_row, end_row):
-                for j in range(self.grid_size[1]):
-                    color_grid[i, j] = self.map_to_palette(C[i, j] / 255.0)
-
         C = (self.u - self.v) * 255
         C = np.clip(C, 0, 255).astype(np.uint8)
         
-        # Apply Gaussian blur
-        C = gaussian_filter(C, sigma=1)
+        # Create a NumPy array for the palette
+        palette_array = np.array(self.palette, dtype=np.uint8)
         
-        color_grid = np.zeros((self.grid_size[0], self.grid_size[1], 3), dtype=np.uint8)
+        # Ensure C values are within the range of the palette indices
+        C = np.clip(C, 0, len(self.palette) - 1)
         
-        # Number of threads to use
-        num_threads = 4
-        chunk_size = self.grid_size[0] // num_threads
-        threads = []
-
-        for i in range(num_threads):
-            start_row = i * chunk_size
-            end_row = (i + 1) * chunk_size if i < num_threads - 1 else self.grid_size[0]
-            thread = threading.Thread(target=process_chunk, args=(start_row, end_row, color_grid, C))
-            threads.append(thread)
-            thread.start()
+        # Map the values to the palette
+        color_grid = palette_array[C]
         
-        # Wait for all threads to complete
-        for thread in threads:
-            thread.join()
-
         surface = pygame.surfarray.make_surface(color_grid)
         
-        # Calculate scaling factor to maintain aspect ratio
         scale_factor = screen_size[1] / self.grid_size[1]
         new_width = int(self.grid_size[0] * scale_factor)
         
-        # Scale the surface
-        scaled_surface = pygame.transform.scale(surface, (new_width, screen_size[1]))
+        scaled_surface = pygame.transform.smoothscale(surface, (new_width, screen_size[1]))
         
-        # Calculate position to center the surface
         x_offset = (screen_size[0] - new_width) // 2
         
-        # Fill the screen with black
         screen.fill((0, 0, 0))
-        
-        # Blit the scaled surface onto the screen
         screen.blit(scaled_surface, (x_offset, 0))
+        
