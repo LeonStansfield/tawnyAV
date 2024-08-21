@@ -1,9 +1,10 @@
+import threading
 import numpy as np
 from PIL import Image
 import pygame
 from .scene import Scene
 
-class ReactionDiffusionScene(Scene):
+class ReactionDiffusionScene1(Scene):
     def __init__(self, reaction_diffusion, name):
         self.name = name
         self.reaction_diffusion = reaction_diffusion
@@ -18,7 +19,7 @@ class ReactionDiffusionScene(Scene):
         for _ in range(pre_simulation_steps):
             self.reaction_diffusion.update()
 
-class ReactionDiffusion:
+class ReactionDiffusion1:
     def __init__(self, grid_size, dA, dB, feed, kill, image_path):
         self.grid_size = grid_size
         self.dA = dA
@@ -67,32 +68,45 @@ class ReactionDiffusion:
         return self.palette[index]
 
     def draw(self, screen, screen_size):
-        def process_chunk(start_row, end_row, color_grid, C):
-            for i in range(start_row, end_row):
-                for j in range(self.grid_size[1]):
-                    color_grid[i, j] = self.map_to_palette(C[i, j] / 255.0)
+            def process_chunk(start_row, end_row, color_grid, C):
+                for i in range(start_row, end_row):
+                    for j in range(self.grid_size[1]):
+                        color_grid[i, j] = self.map_to_palette(C[i, j] / 255.0)
 
-        C = (self.A - self.B) * 255
-        C = np.clip(C, 0, 255).astype(np.uint8)
-        color_grid = np.zeros((self.grid_size[0], self.grid_size[1], 3), dtype=np.uint8)
-        
-        # Process the entire grid in a single thread
-        process_chunk(0, self.grid_size[0], color_grid, C)
+            C = (self.A - self.B) * 255
+            C = np.clip(C, 0, 255).astype(np.uint8)
+            color_grid = np.zeros((self.grid_size[0], self.grid_size[1], 3), dtype=np.uint8)
+            
+            # Number of threads to use
+            num_threads = 4
+            chunk_size = self.grid_size[0] // num_threads
+            threads = []
 
-        surface = pygame.surfarray.make_surface(color_grid)
-        
-        # Calculate scaling factor to maintain aspect ratio
-        scale_factor = screen_size[1] / self.grid_size[1]
-        new_width = int(self.grid_size[0] * scale_factor)
-        
-        # Scale the surface
-        scaled_surface = pygame.transform.scale(surface, (new_width, screen_size[1]))
-        
-        # Calculate position to center the surface
-        x_offset = (screen_size[0] - new_width) // 2
-        
-        # Fill the screen with black
-        screen.fill((0, 0, 0))
-        
-        # Blit the scaled surface onto the screen
-        screen.blit(scaled_surface, (x_offset, 0))
+            for i in range(num_threads):
+                start_row = i * chunk_size
+                end_row = (i + 1) * chunk_size if i < num_threads - 1 else self.grid_size[0]
+                thread = threading.Thread(target=process_chunk, args=(start_row, end_row, color_grid, C))
+                threads.append(thread)
+                thread.start()
+            
+            # Wait for all threads to complete
+            for thread in threads:
+                thread.join()
+
+            surface = pygame.surfarray.make_surface(color_grid)
+            
+            # Calculate scaling factor to maintain aspect ratio
+            scale_factor = screen_size[1] / self.grid_size[1]
+            new_width = int(self.grid_size[0] * scale_factor)
+            
+            # Scale the surface
+            scaled_surface = pygame.transform.scale(surface, (new_width, screen_size[1]))
+            
+            # Calculate position to center the surface
+            x_offset = (screen_size[0] - new_width) // 2
+            
+            # Fill the screen with black
+            screen.fill((0, 0, 0))
+            
+            # Blit the scaled surface onto the screen
+            screen.blit(scaled_surface, (x_offset, 0))

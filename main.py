@@ -6,14 +6,12 @@ import time
 
 from src.audio_processing import AudioProcessor
 from src.waveform import WaveformScene
-from src.reaction_diffusion import ReactionDiffusion, ReactionDiffusionScene
-from src.cellular_automata import CellularAutomata, CellularAutomataScene
+from src.reaction_diffusion1 import ReactionDiffusion1, ReactionDiffusionScene1
+from src.reaction_diffusion2 import ReactionDiffusion2, ReactionDiffusionScene2
+from src.game_of_life import gameOfLife, gameOfLifeScene
+from src.brians_brain_automata import BriansBrainAutomata, BriansBrainAutomataScene
 
 # Constants
-dA = 0.07
-dB = 0.13
-feed = 0.055
-kill = 0.062
 grid_size = (240, 180)
 screen_size = (960, 720)
 image_path = 'resources/wyr_image.png'  # Update this path to your image file
@@ -26,8 +24,8 @@ def create_gui_elements(manager):
     )
     threshold_slider = pygame_gui.elements.UIHorizontalSlider(
         relative_rect=pygame.Rect((40, 40), (200, 20)),
-        start_value=2.0,
-        value_range=(0.5, 5.0),
+        start_value=1.0,
+        value_range=(0.1, 3.5),
         manager=manager
     )
     cooldown_label = pygame_gui.elements.UILabel(
@@ -43,7 +41,7 @@ def create_gui_elements(manager):
     )
     return threshold_slider, cooldown_slider
 
-def handle_events(manager, scene_dropdown, scenes, current_scene, is_fullscreen, show_ui):
+def handle_events(manager, scene_dropdown, scenes, current_scene, is_fullscreen, show_ui, threshold_slider):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             return False, current_scene, is_fullscreen, show_ui
@@ -53,6 +51,16 @@ def handle_events(manager, scene_dropdown, scenes, current_scene, is_fullscreen,
                 pygame.display.set_mode((0, 0), pygame.FULLSCREEN if is_fullscreen else 0)
             elif event.key == pygame.K_h:
                 show_ui = not show_ui
+            elif pygame.K_1 <= event.key <= pygame.K_9:
+                index = event.key - pygame.K_1
+                if index < len(scenes):
+                    current_scene = scenes[index]
+            elif event.key == pygame.K_UP:
+                new_value = min(threshold_slider.get_current_value() + 0.1, threshold_slider.value_range[1])
+                threshold_slider.set_current_value(new_value)
+            elif event.key == pygame.K_DOWN:
+                new_value = max(threshold_slider.get_current_value() - 0.1, threshold_slider.value_range[0])
+                threshold_slider.set_current_value(new_value)
 
         manager.process_events(event)
 
@@ -72,9 +80,12 @@ def main():
 
     # Create scenes
     waveform_scene = WaveformScene("Waveform")
-    reaction_diffusion_scene = ReactionDiffusionScene(ReactionDiffusion(grid_size, dA, dB, feed, kill, image_path), "Reaction-Diffusion")
-    cellular_automata_scene = CellularAutomataScene(CellularAutomata(grid_size, image_path), "Cellular Automata")
-    scenes = [waveform_scene, reaction_diffusion_scene, cellular_automata_scene]
+
+    reaction_diffusion_scene1 = ReactionDiffusionScene1(ReactionDiffusion1(grid_size, 0.07, 0.13, 0.055, 0.062, image_path), "Reaction-Diffusion")
+    reaction_diffusion_scene2 = ReactionDiffusionScene2(ReactionDiffusion2(grid_size, 0.16, 0.4, 0.02, 0.05, 0.4, image_path), "Reaction-Diffusion 2")
+    game_of_life_scene = gameOfLifeScene(gameOfLife(grid_size, image_path), "Game of Life")
+    brians_brain_scene = BriansBrainAutomataScene(BriansBrainAutomata(grid_size, image_path), "Brian's Brain")
+    scenes = [waveform_scene, reaction_diffusion_scene1, reaction_diffusion_scene2, game_of_life_scene, brians_brain_scene]
 
     # Create scene_dropdown
     scene_dropdown = pygame_gui.elements.UIDropDownMenu(
@@ -95,7 +106,7 @@ def main():
         running = True
         while running:
             running, current_scene, is_fullscreen, show_ui = handle_events(
-                manager, scene_dropdown, scenes, current_scene, is_fullscreen, show_ui
+                manager, scene_dropdown, scenes, current_scene, is_fullscreen, show_ui, threshold_slider
             )
 
             data = audio_processor.read_data()

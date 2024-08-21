@@ -7,15 +7,16 @@ VENV_DIR="venv"
 if [ ! -d "$VENV_DIR" ]; then
     echo "Virtual environment not found. Creating one..."
     python3 -m venv $VENV_DIR
-    source $VENV_DIR/bin/activate
-    if [ -f "requirements.txt" ]; then
-        pip install -r requirements.txt
-    else
-        echo "requirements.txt not found. Please provide a requirements file."
-    fi
+fi
+
+# Activate the virtual environment
+source $VENV_DIR/bin/activate
+
+# Check if requirements.txt exists and install/update dependencies
+if [ -f "requirements.txt" ]; then
+    pip install -r requirements.txt
 else
-    # Activate the virtual environment
-    source $VENV_DIR/bin/activate
+    echo "requirements.txt not found. Please provide a requirements file."
 fi
 
 # Run the main Python file

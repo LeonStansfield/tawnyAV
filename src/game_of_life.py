@@ -1,10 +1,12 @@
 import threading
 import numpy as np
+from scipy.signal import convolve2d
+from scipy.ndimage import gaussian_filter
 from PIL import Image
 import pygame
 from .scene import Scene
 
-class CellularAutomata:
+class gameOfLife:
     def __init__(self, grid_size, image_path):
         self.grid_size = grid_size
         self.image_path = image_path
@@ -59,7 +61,7 @@ class CellularAutomata:
         self.grid = new_grid
 
     def define_palette(self):
-        return [(0, 0, 0), (255, 255, 255)]
+        return [(0, 0, 0), (217, 67, 80)]
 
     def map_to_palette(self, value):
         return self.palette[value]
@@ -69,6 +71,9 @@ class CellularAutomata:
         for i in range(self.grid_size[0]):
             for j in range(self.grid_size[1]):
                 color_grid[i, j] = self.map_to_palette(self.grid[i, j])
+        
+        # Apply Gaussian blur
+        color_grid = gaussian_filter(color_grid, sigma=0.6)
 
         surface = pygame.surfarray.make_surface(color_grid)
         
@@ -82,7 +87,7 @@ class CellularAutomata:
         screen.fill((0, 0, 0))
         screen.blit(scaled_surface, (x_offset, 0))
 
-class CellularAutomataScene(Scene):
+class gameOfLifeScene(Scene):
     def __init__(self, cellular_automata, name):
         self.name = name
         self.cellular_automata = cellular_automata

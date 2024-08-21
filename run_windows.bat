@@ -7,15 +7,16 @@ set VENV_DIR=venv
 if not exist %VENV_DIR% (
     echo Virtual environment not found. Creating one...
     python -m venv %VENV_DIR%
-    call %VENV_DIR%\Scripts\activate
-    if exist requirements.txt (
-        pip install -r requirements.txt
-    ) else (
-        echo requirements.txt not found. Please provide a requirements file.
-    )
+)
+
+:: Activate the virtual environment
+call %VENV_DIR%\Scripts\activate
+
+:: Check if requirements.txt exists and install/update dependencies
+if exist requirements.txt (
+    pip install -r requirements.txt
 ) else (
-    :: Activate the virtual environment
-    call %VENV_DIR%\Scripts\activate
+    echo requirements.txt not found. Please provide a requirements file.
 )
 
 :: Run the main Python file
