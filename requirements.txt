@@ -5,3 +5,4 @@ pillow
 pygame==2.5.0
 pygame_gui==0.6.9
 PyOpenGL
+moviepy

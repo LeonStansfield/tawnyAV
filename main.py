@@ -5,11 +5,12 @@ import numpy as np
 import time
 
 from src.audio_processing import AudioProcessor
-from src.waveform import WaveformScene
-from src.reaction_diffusion1 import ReactionDiffusion1, ReactionDiffusionScene1
-from src.reaction_diffusion2 import ReactionDiffusion2, ReactionDiffusionScene2
-from src.game_of_life import gameOfLife, gameOfLifeScene
-from src.brians_brain_automata import BriansBrainAutomata, BriansBrainAutomataScene
+from src.effects.waveform import WaveformScene
+from src.effects.reaction_diffusion1 import ReactionDiffusion1, ReactionDiffusionScene1
+from src.effects.reaction_diffusion2 import ReactionDiffusion2, ReactionDiffusionScene2
+from src.effects.game_of_life import gameOfLife, gameOfLifeScene
+from src.effects.brians_brain_automata import BriansBrainAutomata, BriansBrainAutomataScene
+from src.effects.video import VideoScene
 
 # Constants
 grid_size = (240, 180)
@@ -73,7 +74,7 @@ def handle_events(manager, scene_dropdown, scenes, current_scene, is_fullscreen,
 def main():
     pygame.init()
     screen = pygame.display.set_mode(screen_size)
-    pygame.display.set_caption("Audio Visualizer")
+    pygame.display.set_caption("TAWNY AV")
     clock = pygame.time.Clock()
     manager = pygame_gui.UIManager(screen_size)
     threshold_slider, cooldown_slider = create_gui_elements(manager)
@@ -84,12 +85,12 @@ def main():
 
     # Create scenes
     waveform_scene = WaveformScene("Waveform")
-
     reaction_diffusion_scene1 = ReactionDiffusionScene1(ReactionDiffusion1(grid_size, 0.07, 0.13, 0.055, 0.062, image_path), "Reaction-Diffusion")
     reaction_diffusion_scene2 = ReactionDiffusionScene2(ReactionDiffusion2(grid_size, 0.16, 0.4, 0.02, 0.05, 0.4, image_path), "Reaction-Diffusion 2")
     game_of_life_scene = gameOfLifeScene(gameOfLife(grid_size, image_path), "Game of Life")
     brians_brain_scene = BriansBrainAutomataScene(BriansBrainAutomata(grid_size, image_path), "Brian's Brain")
-    scenes = [waveform_scene, reaction_diffusion_scene1, reaction_diffusion_scene2, game_of_life_scene, brians_brain_scene]
+    video_scene = VideoScene("resources/MVI_9064.MP4", "Video Scene")
+    scenes = [waveform_scene, reaction_diffusion_scene1, reaction_diffusion_scene2, game_of_life_scene, brians_brain_scene, video_scene]
 
     # Create scene_dropdown
     scene_dropdown = pygame_gui.elements.UIDropDownMenu(
