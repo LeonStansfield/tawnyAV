@@ -11,10 +11,11 @@ from src.effects.reaction_diffusion2 import ReactionDiffusion2, ReactionDiffusio
 from src.effects.game_of_life import gameOfLife, gameOfLifeScene
 from src.effects.brians_brain_automata import BriansBrainAutomata, BriansBrainAutomataScene
 from src.effects.video import VideoScene
+from src.effects.video_reaction_diffusion import VideoReactionDiffusionScene, VideoReactionDiffusion
 
 # Constants
-grid_size = (240, 180)
-screen_size = (960, 720)
+grid_size = (320, 180)
+screen_size = (960, 540)
 image_path = 'resources/wyr_image.png'  # Update this path to your image file
 
 def create_gui_elements(manager):
@@ -90,7 +91,8 @@ def main():
     game_of_life_scene = gameOfLifeScene(gameOfLife(grid_size, image_path), "Game of Life")
     brians_brain_scene = BriansBrainAutomataScene(BriansBrainAutomata(grid_size, image_path), "Brian's Brain")
     video_scene = VideoScene("resources/MVI_9064.MP4", "Video Scene")
-    scenes = [waveform_scene, reaction_diffusion_scene1, reaction_diffusion_scene2, game_of_life_scene, brians_brain_scene, video_scene]
+    video_reaction_diffusion_scene = VideoReactionDiffusionScene("resources/MVI_9064.MP4", VideoReactionDiffusion(grid_size, 0.07, 0.13, 0.055, 0.062), "Video Reaction-Diffusion")
+    scenes = [waveform_scene, reaction_diffusion_scene1, reaction_diffusion_scene2, game_of_life_scene, brians_brain_scene, video_scene, video_reaction_diffusion_scene]
 
     # Create scene_dropdown
     scene_dropdown = pygame_gui.elements.UIDropDownMenu(
