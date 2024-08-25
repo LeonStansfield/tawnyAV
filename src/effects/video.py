@@ -38,5 +38,5 @@ class VideoScene(Scene):
 
     def handle_beat(self):
         # Skip to a random part of the video
-        self.current_time = random.uniform(1, self.clip.duration - 1)
-    
+        random_time = random.uniform(1, self.clip.duration - 1)
+        self.current_time = random_time
