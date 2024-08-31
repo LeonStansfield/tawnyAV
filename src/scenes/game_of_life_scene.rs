@@ -1,12 +1,13 @@
 use macroquad::prelude::*;
 use crate::scene::Scene;
 
-pub struct InvertedScene {
+pub struct GameOfLifeScene {
     image: Texture2D,
     material: Material,
+    time: f32,
 }
 
-impl InvertedScene {
+impl GameOfLifeScene {
     pub async fn new() -> Self {
         let image = load_texture("resources/wyr_logo.png").await.unwrap();
 
@@ -19,26 +20,35 @@ impl InvertedScene {
         let material = load_material(
             ShaderSource::Glsl {
                 vertex: DEFAULT_VERTEX_SHADER,
-                fragment: INVERTED_FRAGMENT_SHADER,
+                fragment: GAME_OF_LIFE_FRAGMENT_SHADER,
             },
             MaterialParams {
                 pipeline_params,
+                uniforms: vec![
+                    UniformDesc::new("TextureSize", UniformType::Float2),
+                    UniformDesc::new("Time", UniformType::Float1),
+                ],
                 ..Default::default()
             },
         )
         .unwrap();
 
-        Self { image, material }
+        Self { image, material, time: 0.0 }
     }
 }
 
-impl Scene for InvertedScene {
+impl Scene for GameOfLifeScene {
     fn update(&mut self, _audio_data: &[f32]) {
         // Update scene based on audio data
+        self.time += get_frame_time();
     }
 
     fn draw(&self) {
         gl_use_material(&self.material);
+
+        let texture_size = vec2(self.image.width() as f32, self.image.height() as f32);
+        self.material.set_uniform("TextureSize", texture_size);
+        self.material.set_uniform("Time", self.time);
 
         draw_texture_ex(
             &self.image,
@@ -55,16 +65,42 @@ impl Scene for InvertedScene {
     }
 }
 
-const INVERTED_FRAGMENT_SHADER: &'static str = "#version 100
+const GAME_OF_LIFE_FRAGMENT_SHADER: &'static str = "#version 100
 precision lowp float;
 
 varying vec2 uv;
 
 uniform sampler2D Texture;
+uniform vec2 TextureSize;
+uniform float Time;
 
 void main() {
+    vec2 texel = 1.0 / TextureSize;
+
     vec4 color = texture2D(Texture, uv);
-    gl_FragColor = vec4(1.0 - color.rgb, color.a);
+    float alive = color.r < 0.5 ? 1.0 : 0.0;
+
+    float neighbors = 0.0;
+    for (int x = -1; x <= 1; x++) {
+        for (int y = -1; y <= 1; y++) {
+            if (x == 0 && y == 0) continue;
+            vec2 offset = vec2(float(x), float(y)) * texel;
+            vec4 neighbor_color = texture2D(Texture, uv + offset);
+            neighbors += neighbor_color.r < 0.5 ? 1.0 : 0.0;
+        }
+    }
+
+    if (alive == 1.0) {
+        if (neighbors < 2.0 || neighbors > 3.0) {
+            alive = 0.0;
+        }
+    } else {
+        if (neighbors == 3.0) {
+            alive = 1.0;
+        }
+    }
+
+    gl_FragColor = vec4(vec3(1.0 - alive), 1.0);
 }
 ";
 

@@ -1,4 +1,6 @@
 use macroquad::prelude::*;
+use std::time::{Duration, Instant};
+
 mod audio_processing;
 mod scene;
 mod scenes;
@@ -11,6 +13,7 @@ async fn main() {
     // Initialize window
     let mut is_fullscreen = false;
     request_new_screen_size(854., 480.);
+    let frame_duration = Duration::from_secs_f32(1.0 / 30.0);
 
     // Initialize audio processing
     let _stream = audio_processing::initialize_audio();
@@ -20,6 +23,8 @@ async fn main() {
     let mut scene_manager = SceneManager::new(scenes);
 
     loop {
+        let frame_start = Instant::now();
+
         clear_background(WHITE);
 
         // Update and draw the current scene
@@ -46,6 +51,13 @@ async fn main() {
             }
         }
 
-        next_frame().await
+        next_frame().await;
+
+        // Calculate frame time and sleep if necessary to maintain 30fps
+        let frame_time = frame_start.elapsed();
+        if frame_time < frame_duration {
+            let sleep_duration = frame_duration - frame_time;
+            std::thread::sleep(sleep_duration);
+        }
     }
 }
