@@ -1,12 +1,12 @@
 use macroquad::prelude::*;
 use crate::scene::Scene;
 
-pub struct BasicScene {
+pub struct InvertedScene {
     image: Texture2D,
     material: Material,
 }
 
-impl BasicScene {
+impl InvertedScene {
     pub async fn new() -> Self {
         let image = load_texture("resources/wyr_logo.png").await.unwrap();
 
@@ -19,7 +19,7 @@ impl BasicScene {
         let material = load_material(
             ShaderSource::Glsl {
                 vertex: DEFAULT_VERTEX_SHADER,
-                fragment: DEFAULT_FRAGMENT_SHADER,
+                fragment: INVERTED_FRAGMENT_SHADER,
             },
             MaterialParams {
                 pipeline_params,
@@ -32,7 +32,7 @@ impl BasicScene {
     }
 }
 
-impl Scene for BasicScene {
+impl Scene for InvertedScene {
     fn update(&mut self, _audio_data: &[f32]) {
         // Update scene based on audio data
     }
@@ -55,7 +55,7 @@ impl Scene for BasicScene {
     }
 }
 
-const DEFAULT_FRAGMENT_SHADER: &'static str = "#version 100
+const INVERTED_FRAGMENT_SHADER: &'static str = "#version 100
 precision lowp float;
 
 varying vec2 uv;
@@ -63,7 +63,8 @@ varying vec2 uv;
 uniform sampler2D Texture;
 
 void main() {
-    gl_FragColor = texture2D(Texture, uv);
+    vec4 color = texture2D(Texture, uv);
+    gl_FragColor = vec4(1.0 - color.rgb, color.a);
 }
 ";
 

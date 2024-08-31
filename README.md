@@ -5,7 +5,6 @@ Tawny AV is a rust based audio visual software to display dynamic visualizations
 
 
 ## Installation/Usage
-
 - Rewrite installation + usage instructions for new rust rewrite
 
 ## Todo
