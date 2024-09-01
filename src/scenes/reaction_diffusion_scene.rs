@@ -14,7 +14,7 @@ pub struct ReactionDiffusionScene {
 
 impl ReactionDiffusionScene {
     pub async fn new() -> Self {
-        let image = load_texture("resources/wyr_logo.png").await.unwrap();
+        let image = load_texture("resources/wyr_logo.png").await.unwrap(); // TODO: Set to a global constant
 
         let pipeline_params = PipelineParams {
             depth_write: true,
@@ -38,9 +38,9 @@ impl ReactionDiffusionScene {
         )
         .unwrap();
 
-        let render_width = 1920.0;
+        // Define the render targets
+        let render_width = 1920.0; // TODO: Set to a global constant
         let render_height = 1080.0;
-        // Create two render targets for the reaction-diffusion process
         let render_target_a = render_target(render_width as u32, render_height as u32);
         let render_target_b = render_target(render_width as u32, render_height as u32);
 
@@ -77,9 +77,10 @@ impl ReactionDiffusionScene {
         }
     }
 
+    // Currently doesnt work
     pub fn reset(&mut self) {
         // Reset the render targets
-        let render_width = 1920.0;
+        let render_width = 1920.0; // TODO: Set to a global constant
         let render_height = 1080.0;
         self.render_target_a = render_target(render_width as u32, render_height as u32);
         self.render_target_b = render_target(render_width as u32, render_height as u32);
@@ -117,7 +118,6 @@ impl Scene for ReactionDiffusionScene {
         // Update time
         self.time += get_frame_time();
 
-        // If time is greater than 10 seconds, reset the scene
         if self.time > 3.0 {
             self.reset();
         }
@@ -130,7 +130,7 @@ impl Scene for ReactionDiffusionScene {
             (&self.render_target_b, &self.render_target_a)
         };
 
-        // Set camera to current render target with a 1080p viewport
+        // Set camera to current render target
         set_camera(&Camera2D {
             zoom: vec2(2.0 / self.render_width, 2.0 / self.render_height),
             target: vec2(self.render_width / 2.0, self.render_height / 2.0),
@@ -138,10 +138,9 @@ impl Scene for ReactionDiffusionScene {
             ..Default::default()
         });
 
-        // Clear the render target
         clear_background(BLACK);
 
-        // Use the custom material (shader)
+        // Use the custom material
         gl_use_material(&self.material);
 
         let texture_size = vec2(self.render_width, self.render_height);
@@ -167,7 +166,7 @@ impl Scene for ReactionDiffusionScene {
         set_default_camera();
         clear_background(WHITE);
 
-        // Draw the final render target texture to the screen, stretched to fit the screen dimensions
+        // Draw the final render target texture to the screen
         draw_texture_ex(
             &next_render_target.texture,
             0.0,
@@ -184,6 +183,7 @@ impl Scene for ReactionDiffusionScene {
     }
 }
 
+// TODO: Move shaders to a separate file
 const REACTION_DIFFUSION_FRAGMENT_SHADER: &'static str = "#version 100
 precision lowp float;
 
@@ -195,9 +195,9 @@ uniform float Time;
 
 // Parameters for reaction-diffusion
 const float dA = 1.0;
-const float dB = 0.5;
-const float feed = 0.055;
-const float kill = 0.062;
+const float dB = 0.6;
+const float feed = 0.0367;
+const float kill = 0.0649;
 
 vec2 laplacian(vec2 p) {
     vec2 sum = vec2(0.0);

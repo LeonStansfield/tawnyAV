@@ -28,10 +28,10 @@ async fn main() {
         clear_background(WHITE);
 
         // Update and draw the current scene
-        scene_manager.update(&[]); // Pass audio data here
+        scene_manager.update(&[]); // TODO: Pass audio data here
         scene_manager.draw();
 
-        // Handle scene switching (e.g., based on user input)
+        // Handle scene switching
         const DIGIT_KEYS: [KeyCode; 10] = [
             KeyCode::Key1, KeyCode::Key2, KeyCode::Key3, KeyCode::Key4, KeyCode::Key5,
             KeyCode::Key6, KeyCode::Key7, KeyCode::Key8, KeyCode::Key9, KeyCode::Key0,
@@ -39,7 +39,7 @@ async fn main() {
         
         for (i, &key) in DIGIT_KEYS.iter().enumerate() {
             if is_key_pressed(key) {
-                scene_manager.switch_scene(i); // Scene indices are 0-based
+                scene_manager.switch_scene(i);
             }
         }
 

@@ -31,11 +31,9 @@ impl BasicScene {
         )
         .unwrap();
 
-        // Define the render target resolution (1080p)
-        let render_width = 1920.0;
+        // Define the render target
+        let render_width = 1920.0; // TODO: Set to a global constant
         let render_height = 1080.0;
-
-        // Create the render target with 1080p resolution
         let render_target = render_target(render_width as u32, render_height as u32);
 
         Self { 
@@ -54,7 +52,7 @@ impl Scene for BasicScene {
     }
 
     fn draw(&mut self) {
-        // Set camera to render target with a 1080p viewport
+        // Set camera to render target
         set_camera(&Camera2D {
             zoom: vec2(2.0 / self.render_width, 2.0 / self.render_height),
             target: vec2(self.render_width / 2.0, self.render_height / 2.0),
@@ -84,7 +82,7 @@ impl Scene for BasicScene {
         set_default_camera();
         clear_background(BLACK);
 
-        // Draw the render target texture to the screen, stretched to fit the screen dimensions
+        // Draw the render target texture to the screen
         draw_texture_ex(
             &self.render_target.texture,
             0.0,
@@ -98,6 +96,7 @@ impl Scene for BasicScene {
     }
 }
 
+// TODO: Move shaders to a separate file
 const DEFAULT_FRAGMENT_SHADER: &'static str = "#version 100
 precision lowp float;
 
