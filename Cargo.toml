@@ -7,6 +7,7 @@ edition = "2021"
 macroquad = "0.4.13"
 cpal = "0.15"
 dasp = "0.11"
+rand = "0.8.5"
 
 
 # Enable a small amount of optimization in the dev profile.

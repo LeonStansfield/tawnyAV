@@ -1,4 +1,5 @@
 use crate::scene::Scene;
+use ::rand::{thread_rng, Rng};
 use macroquad::prelude::*;
 
 pub struct ReactionDiffusionScene {
@@ -44,26 +45,8 @@ impl ReactionDiffusionScene {
         let render_target_a = render_target(render_width as u32, render_height as u32);
         let render_target_b = render_target(render_width as u32, render_height as u32);
 
-        // Render the initial image to render_target_a
-        set_camera(&Camera2D {
-            zoom: vec2(2.0 / render_width, 2.0 / render_height),
-            target: vec2(render_width / 2.0, render_height / 2.0),
-            render_target: Some(render_target_a.clone()),
-            ..Default::default()
-        });
-
-        clear_background(BLACK);
-        draw_texture_ex(
-            &image,
-            0.0,
-            0.0,
-            WHITE,
-            DrawTextureParams {
-                dest_size: Some(vec2(render_width, render_height)),
-                ..Default::default()
-            },
-        );
-        set_default_camera();
+        // Draw noise and texture to render targets
+        Self::draw_noise_and_texture(&image, &render_target_a, &render_target_b, render_width, render_height);
 
         Self {
             image,
@@ -77,36 +60,93 @@ impl ReactionDiffusionScene {
         }
     }
 
-    // Currently doesnt work
+    fn draw_noise_and_texture(
+        image: &Texture2D,
+        render_target_a: &RenderTarget,
+        render_target_b: &RenderTarget,
+        render_width: f32,
+        render_height: f32,
+    ) {
+        set_camera(&Camera2D {
+            zoom: vec2(2.0 / render_width, 2.0 / render_height),
+            target: vec2(render_width / 2.0, render_height / 2.0),
+            render_target: Some(render_target_a.clone()),
+            ..Default::default()
+        });
+    
+        // Add random noise with larger squares
+        let mut rng = thread_rng();
+        let num_squares = rng.gen_range(50..500);
+        for _ in 0..num_squares {
+            let x = rng.gen_range(0.0..render_width);
+            let y = rng.gen_range(0.0..render_height);
+            let size = rng.gen_range(1.0..10.0); // Random size for the squares
+            let noise = if rng.gen_bool(0.5) {
+                1.0 // Bright white
+            } else {
+                0.0 // Black
+            };
+            draw_rectangle(
+                x,
+                y,
+                size,
+                size,
+                Color::new(noise, noise, noise, 1.0),
+            );
+        }
+    
+        set_camera(&Camera2D {
+            zoom: vec2(2.0 / render_width, 2.0 / render_height),
+            target: vec2(render_width / 2.0, render_height / 2.0),
+            render_target: Some(render_target_b.clone()),
+            ..Default::default()
+        });
+        clear_background(BLACK);
+    
+        // Add random noise with larger squares
+        for _ in 0..num_squares {
+            let x = rng.gen_range(0.0..render_width);
+            let y = rng.gen_range(0.0..render_height);
+            let size = rng.gen_range(1.0..10.0); // Random size for the squares
+            let noise = if rng.gen_bool(0.5) {
+                1.0 // Bright white
+            } else {
+                0.0 // Black
+            };
+            draw_rectangle(
+                x,
+                y,
+                size,
+                size,
+                Color::new(noise, noise, noise, 1.0),
+            );
+        }
+    
+        // Draw image
+        draw_texture_ex(
+            image,
+            0.0,
+            0.0,
+            WHITE,
+            DrawTextureParams {
+                dest_size: Some(vec2(render_width, render_height)),
+                ..Default::default()
+            },
+        );
+    
+        set_default_camera();
+    }
+
     pub fn reset(&mut self) {
         // Reset the render targets
         let render_width = 1920.0; // TODO: Set to a global constant
         let render_height = 1080.0;
         self.render_target_a = render_target(render_width as u32, render_height as u32);
         self.render_target_b = render_target(render_width as u32, render_height as u32);
-
-        // Clear the render target A
-        set_camera(&Camera2D {
-            zoom: vec2(2.0 / self.render_width, 2.0 / self.render_height),
-            target: vec2(self.render_width / 2.0, self.render_height / 2.0),
-            render_target: Some(self.render_target_a.clone()),
-            ..Default::default()
-        });
-        clear_background(BLACK);
-
-        // Render the initial image to render_target_a
-        draw_texture_ex(
-            &self.image,
-            0.0,
-            0.0,
-            WHITE,
-            DrawTextureParams {
-                dest_size: Some(vec2(self.render_width, self.render_height)),
-                ..Default::default()
-            },
-        );
-        set_default_camera();
-
+    
+        // Draw noise and texture to render targets
+        Self::draw_noise_and_texture(&self.image, &self.render_target_a, &self.render_target_b, self.render_width, self.render_height);
+    
         // Reset time and current target
         self.time = 0.0;
         self.current_target = true;
