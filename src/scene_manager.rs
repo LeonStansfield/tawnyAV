@@ -23,7 +23,7 @@ impl SceneManager {
         self.scenes[self.current_scene].update(audio_data);
     }
 
-    pub fn draw(&self) {
+    pub fn draw(&mut self) {
         self.scenes[self.current_scene].draw();
     }
 }

@@ -4,6 +4,9 @@ use crate::scene::Scene;
 pub struct BasicScene {
     image: Texture2D,
     material: Material,
+    render_target: RenderTarget,
+    render_width: f32,
+    render_height: f32,
 }
 
 impl BasicScene {
@@ -28,7 +31,20 @@ impl BasicScene {
         )
         .unwrap();
 
-        Self { image, material }
+        // Define the render target resolution (1080p)
+        let render_width = 1920.0;
+        let render_height = 1080.0;
+
+        // Create the render target with 1080p resolution
+        let render_target = render_target(render_width as u32, render_height as u32);
+
+        Self { 
+            image, 
+            material, 
+            render_target,
+            render_width,
+            render_height
+        }
     }
 }
 
@@ -37,7 +53,18 @@ impl Scene for BasicScene {
         // Update scene based on audio data
     }
 
-    fn draw(&self) {
+    fn draw(&mut self) {
+        // Set camera to render target with a 1080p viewport
+        set_camera(&Camera2D {
+            zoom: vec2(2.0 / self.render_width, 2.0 / self.render_height),
+            target: vec2(self.render_width / 2.0, self.render_height / 2.0),
+            render_target: Some(self.render_target.clone()),
+            ..Default::default()
+        });
+
+        clear_background(LIGHTGRAY);
+
+        // Draw the scene onto the render target
         gl_use_material(&self.material);
 
         draw_texture_ex(
@@ -46,12 +73,28 @@ impl Scene for BasicScene {
             0.0,
             WHITE,
             DrawTextureParams {
-                dest_size: Some(vec2(screen_width(), screen_height())),
+                dest_size: Some(vec2(self.render_width, self.render_height)),
                 ..Default::default()
             },
         );
 
         gl_use_default_material();
+
+        // Reset camera to draw to the screen
+        set_default_camera();
+        clear_background(BLACK);
+
+        // Draw the render target texture to the screen, stretched to fit the screen dimensions
+        draw_texture_ex(
+            &self.render_target.texture,
+            0.0,
+            0.0,
+            WHITE,
+            DrawTextureParams {
+                dest_size: Some(vec2(screen_width(), screen_height())),
+                ..Default::default()
+            },
+        );
     }
 }
 
