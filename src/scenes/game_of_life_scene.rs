@@ -3,6 +3,7 @@ use crate::scene::Scene;
 
 pub struct GameOfLifeScene {
     image: Texture2D,
+    frame_buffer: RenderTarget,
     material: Material,
     time: f32,
 }
@@ -10,6 +11,7 @@ pub struct GameOfLifeScene {
 impl GameOfLifeScene {
     pub async fn new() -> Self {
         let image = load_texture("resources/wyr_logo.png").await.unwrap();
+        let frame_buffer = render_target(image.width() as u32, image.height() as u32);
 
         let pipeline_params = PipelineParams {
             depth_write: true,
@@ -33,7 +35,12 @@ impl GameOfLifeScene {
         )
         .unwrap();
 
-        Self { image, material, time: 0.0 }
+        Self {
+            image,
+            frame_buffer,
+            material,
+            time: 0.0,
+        }
     }
 }
 
@@ -41,17 +48,51 @@ impl Scene for GameOfLifeScene {
     fn update(&mut self, _audio_data: &[f32]) {
         // Update scene based on audio data
         self.time += get_frame_time();
+
+        
     }
 
     fn draw(&self) {
         gl_use_material(&self.material);
 
+        // Determine which texture to use as input for the shader
+        let input_texture = if self.time <= 0.1 {
+            &self.image // Use the initial image for the first frame
+        } else {
+            &self.frame_buffer.texture // Use the frame buffer for subsequent frames
+        };
+
+        let frame_buffer_copy = &self.frame_buffer;
         let texture_size = vec2(self.image.width() as f32, self.image.height() as f32);
         self.material.set_uniform("TextureSize", texture_size);
         self.material.set_uniform("Time", self.time);
 
+        // Set the camera to render to the frame buffer
+        set_camera(&Camera2D {
+            render_target: Some(frame_buffer_copy.clone()),
+            ..Default::default()
+        });
+
+        // Clear the frame buffer and draw the Game of Life
+        clear_background(BLANK);
+
         draw_texture_ex(
-            &self.image,
+            input_texture,
+            0.0,
+            0.0,
+            WHITE,
+            DrawTextureParams {
+                dest_size: Some(texture_size),
+                ..Default::default()
+            },
+        );
+
+        // Reset the camera to render to the screen
+        set_default_camera();
+
+        // Draw the frame buffer to the screen
+        draw_texture_ex(
+            &self.frame_buffer.texture,
             0.0,
             0.0,
             WHITE,
