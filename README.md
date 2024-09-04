@@ -7,9 +7,9 @@ Tawny AV is a rust based audio visual software to display dynamic visualizations
 ## Installation/Usage
 
 ## Todo
+- Create global variables for global things such as render resolution, resource file paths and to send signal when beat is detected, ect.
 - Rewrite installation + usage instructions for new rust rewrite
 - Add support to play videos and apply shader effects to videos
-- Create global variables for global things such as render resolution, resource file paths, ect.
 
 ## Bugs
  - Reset function on reaction diffusion is not working. It does not reset the state of the simulation and instead flashes the image then leaves the screen black
