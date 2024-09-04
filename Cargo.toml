@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 macroquad = "0.4.13"
+lazy_static = "1.5.0"
 cpal = "0.15"
 dasp = "0.11"
 rand = "0.8.5"

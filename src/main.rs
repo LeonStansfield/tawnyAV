@@ -5,6 +5,7 @@ mod audio_processing;
 mod scene;
 mod scenes;
 mod scene_manager;
+pub mod globals;
 
 use scene_manager::SceneManager;
 
@@ -12,7 +13,7 @@ use scene_manager::SceneManager;
 async fn main() {
     // Initialize window
     let mut is_fullscreen = false;
-    request_new_screen_size(854., 480.);
+    request_new_screen_size(*globals::SCREEN_WIDTH.lock().unwrap(), *globals::SCREEN_HEIGHT.lock().unwrap());
     let frame_duration = Duration::from_secs_f32(1.0 / 30.0);
 
     // Initialize audio processing
@@ -28,7 +29,7 @@ async fn main() {
         clear_background(WHITE);
 
         // Update and draw the current scene
-        scene_manager.update(&[]); // TODO: Pass audio data here
+        scene_manager.update(); // TODO: Pass audio data here
         scene_manager.draw();
 
         // Handle scene switching

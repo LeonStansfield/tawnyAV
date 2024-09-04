@@ -3,6 +3,8 @@ use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 use std::collections::VecDeque;
 
+use crate::globals;
+
 pub fn initialize_audio() -> Arc<cpal::Stream> {
     // Initialize the CPAL host
     let host = cpal::default_host();
@@ -77,7 +79,8 @@ where
 
             let current_time = Instant::now();
             if energy > dynamic_threshold && current_time.duration_since(*last_beat_time) > cooldown_time {
-                println!("Peak detected: {}", energy);
+                let mut beat_detected = globals::BEAT_DETECTED.lock().unwrap();
+                *beat_detected = true;
                 *last_beat_time = current_time;
             }
         },

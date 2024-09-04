@@ -1,5 +1,6 @@
 use macroquad::prelude::*;
 use crate::scene::Scene;
+use crate::globals;
 
 pub struct ColourScene {
     image: Texture2D,
@@ -12,7 +13,7 @@ pub struct ColourScene {
 
 impl ColourScene {
     pub async fn new() -> Self {
-        let image = load_texture("resources/wyr_logo.png").await.unwrap();
+        let image = load_texture(*globals::LOGO_FILEPATH).await.unwrap();
 
         let pipeline_params = PipelineParams {
             depth_write: true,
@@ -37,8 +38,8 @@ impl ColourScene {
         .unwrap();
 
         // Define the render target
-        let render_width = 1920.0; // TODO: Set to a global constant
-        let render_height = 1080.0;
+        let render_width = *globals::RENDER_WIDTH.lock().unwrap();
+        let render_height = *globals::RENDER_HEIGHT.lock().unwrap();
         let render_target = render_target(render_width as u32, render_height as u32);
 
         Self { 
@@ -57,12 +58,19 @@ impl ColourScene {
 }
 
 impl Scene for ColourScene {
-    fn update(&mut self, _audio_data: &[f32]) {
-        // Update scene based on audio data
+    fn update(&mut self) {
+        // Update time
         self.time += get_frame_time();
 
         if self.time > 10.0 {
             self.reset();
+        }
+
+        // Update scene based on audio data
+        if *globals::BEAT_DETECTED.lock().unwrap() == true {
+            // Do thing
+            let mut beat_detected = globals::BEAT_DETECTED.lock().unwrap();
+            *beat_detected = false;
         }
     }
 

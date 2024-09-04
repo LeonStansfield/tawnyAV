@@ -19,8 +19,8 @@ impl SceneManager {
         }
     }
 
-    pub fn update(&mut self, audio_data: &[f32]) {
-        self.scenes[self.current_scene].update(audio_data);
+    pub fn update(&mut self) {
+        self.scenes[self.current_scene].update();
     }
 
     pub fn draw(&mut self) {
