@@ -4,16 +4,20 @@
 Tawny AV is a rust based audio visual software to display dynamic visualizations based live audio captured by a microphone. Tawny dynamically triggers effects based on the beat of the audio input in order to create procedural visualizations.
 
 
-## Installation/Usage
+## Installation
+- If you havent got rust installed already, install rust by following the instructions at [rustup.rs](https://rustup.rs/)
+- Clone the repository with `git clone https://github.com/LeonStansfield/tawnyAV.git`
+- Run the program with `cargo run --release`
+
+## Usage
+- Run the program with `cargo run --release`
+- Press `F11` to toggle fullscreen
+- Press the number keys `1-9` to switch between different visualizations
+- Press `Space` to stop the beat detection
+- Press the `Up` and `Down` arrow keys to adjust the sensitivity of the beat detection --  Not implemented yet
 
 ## Todo
-- Create global variables for global things such as render resolution, resource file paths and to send signal when beat is detected, ect.
-- Rewrite installation + usage instructions for new rust rewrite
 - Add support to play videos and apply shader effects to videos
 
 ## Bugs
- - Reset function on reaction diffusion is not working. It does not reset the state of the simulation and instead flashes the image then leaves the screen black
- - When pressing f11 for fullscreen, the window goes fullscreen but always on the primary monitor. This should be on the monitor the window is currently on.
- - The reaction diffusion simulation is not working as expected. The simulation does not generate patterns as expected instead fading to black quickly.
- - Game of life doesnt work as expected at all.
- 
+ - When pressing f11 for fullscreen, the window goes fullscreen but always on the primary monitor. This should be on the monitor the window is currently on. Also fullscreen doesnt work on linux.

@@ -2,6 +2,7 @@ use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 use std::collections::VecDeque;
+use macroquad::prelude::*;
 
 use crate::globals;
 
@@ -60,6 +61,11 @@ where
         move |data: &[T], _: &cpal::InputCallbackInfo| {
             let mut energy_queue = energy_queue_clone.lock().unwrap();
             let mut last_beat_time = last_beat_time_clone.lock().unwrap();
+            let beat_detection_enabled = globals::BEAT_DETECTION_ENABLED.lock().unwrap();
+
+            if !*beat_detection_enabled {
+                return;
+            }
 
             let mut energy: f32 = 0.0;
             for &sample in data.iter() {
@@ -88,4 +94,3 @@ where
         None, // Latency hint
     )
 }
-

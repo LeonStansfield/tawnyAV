@@ -5,6 +5,7 @@ mod audio_processing;
 mod scene;
 mod scenes;
 mod scene_manager;
+mod input;
 pub mod globals;
 
 use scene_manager::SceneManager;
@@ -12,7 +13,6 @@ use scene_manager::SceneManager;
 #[macroquad::main("TawnyAV")]
 async fn main() {
     // Initialize window
-    let mut is_fullscreen = false;
     request_new_screen_size(*globals::SCREEN_WIDTH.lock().unwrap(), *globals::SCREEN_HEIGHT.lock().unwrap());
     let frame_duration = Duration::from_secs_f32(1.0 / 30.0);
 
@@ -26,31 +26,13 @@ async fn main() {
     loop {
         let frame_start = Instant::now();
 
+        input::handle_input(&mut scene_manager).await;
+
         clear_background(WHITE);
 
         // Update and draw the current scene
-        scene_manager.update(); // TODO: Pass audio data here
+        scene_manager.update();
         scene_manager.draw();
-
-        // Handle scene switching
-        const DIGIT_KEYS: [KeyCode; 10] = [
-            KeyCode::Key1, KeyCode::Key2, KeyCode::Key3, KeyCode::Key4, KeyCode::Key5,
-            KeyCode::Key6, KeyCode::Key7, KeyCode::Key8, KeyCode::Key9, KeyCode::Key0,
-        ];
-        
-        for (i, &key) in DIGIT_KEYS.iter().enumerate() {
-            if is_key_pressed(key) {
-                scene_manager.switch_scene(i);
-            }
-        }
-
-        if is_key_pressed(KeyCode::F11) {
-            is_fullscreen = !is_fullscreen;
-            set_fullscreen(is_fullscreen);
-            if !is_fullscreen {
-                request_new_screen_size(854., 480.);
-            }
-        }
 
         next_frame().await;
 

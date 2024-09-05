@@ -1,4 +1,5 @@
 use macroquad::prelude::*;
+use macroquad::rand::gen_range;
 use crate::scene::Scene;
 use crate::globals;
 
@@ -69,6 +70,8 @@ impl Scene for ColourScene {
         // Update scene based on audio data
         if *globals::BEAT_DETECTED.lock().unwrap() == true {
             // Do thing
+            self.time = gen_range(0.0, 10.0);
+
             let mut beat_detected = globals::BEAT_DETECTED.lock().unwrap();
             *beat_detected = false;
         }
