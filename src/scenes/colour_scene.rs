@@ -14,14 +14,17 @@ pub struct ColourScene {
 
 impl ColourScene {
     pub async fn new() -> Self {
+        // Load the logo image
         let image = load_texture(*globals::LOGO_FILEPATH).await.unwrap();
 
+        // Define the pipeline parameters
         let pipeline_params = PipelineParams {
             depth_write: true,
             depth_test: Comparison::LessOrEqual,
             ..Default::default()
         };
 
+        // Define the custom material
         let material = load_material(
             ShaderSource::Glsl {
                 vertex: DEFAULT_VERTEX_SHADER,
@@ -83,6 +86,7 @@ impl Scene for ColourScene {
         // Use the custom material
         gl_use_material(&self.material);
 
+        // Set the uniforms
         let texture_size = vec2(self.image.width() as f32, self.image.height() as f32);
         self.material.set_uniform("TextureSize", texture_size);
         self.material.set_uniform("Time", self.time);

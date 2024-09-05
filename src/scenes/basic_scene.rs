@@ -71,7 +71,7 @@ impl Scene for BasicScene {
 
         // Draw the scene onto the render target
         gl_use_material(&self.material);
-
+        
         draw_texture_ex(
             &self.image,
             0.0,

@@ -14,14 +14,17 @@ pub struct PaperMeltScene {
 
 impl PaperMeltScene {
     pub async fn new() -> Self {
+        // Load the logo image
         let image = load_texture(*globals::LOGO_FILEPATH).await.unwrap();
 
+        // Define the pipeline parameters
         let pipeline_params = PipelineParams {
             depth_write: true,
             depth_test: Comparison::LessOrEqual,
             ..Default::default()
         };
-
+        
+        // Define the custom material
         let material = load_material(
             ShaderSource::Glsl {
                 vertex: DEFAULT_VERTEX_SHADER,
@@ -68,7 +71,7 @@ impl Scene for PaperMeltScene {
     }
 
     fn draw(&mut self) {
-        // Set camera to the render target for feedback loop
+        // Set camera to the render target
         set_camera(&Camera2D {
             zoom: vec2(2.0 / self.render_width, 2.0 / self.render_height),
             target: vec2(self.render_width / 2.0, self.render_height / 2.0),
@@ -81,6 +84,7 @@ impl Scene for PaperMeltScene {
         // Use the custom material
         gl_use_material(&self.material);
 
+        // Set the uniforms
         let texture_size = vec2(self.render_width, self.render_height);
         self.material.set_uniform("TextureSize", texture_size);
         self.material.set_uniform("Time", self.time);
@@ -118,7 +122,6 @@ impl Scene for PaperMeltScene {
     }
 }
 
-// The trippy, crazy fragment shader with noise and feedback effects
 const PAPER_MELT_FRAGMENT_SHADER: &'static str = "#version 100
 precision lowp float;
 
