@@ -17,6 +17,8 @@ Tawny AV is a rust based audio visual software to display dynamic visualizations
 - Press the `Up` and `Down` arrow keys to adjust the sensitivity of the beat detection --  Not implemented yet
 
 ## Todo
+- Modify the paper melt scene so that it is more visually appealing, with the logo more integrated, fits a set colour scheme and adapts to the beat of the music
+- Modify the cloud scene so that it fits a set colour scheme, with the logo integrated and adapts to the beat of the music
 - Add support to play videos and apply shader effects to videos
 
 ## Bugs
