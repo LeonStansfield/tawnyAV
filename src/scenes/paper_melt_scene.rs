@@ -3,7 +3,7 @@ use macroquad::rand::gen_range;
 use crate::scene::Scene;
 use crate::globals;
 
-pub struct ColourScene {
+pub struct PaperMeltScene {
     image: Texture2D,
     material: Material,
     time: f32,
@@ -12,7 +12,7 @@ pub struct ColourScene {
     render_height: f32,
 }
 
-impl ColourScene {
+impl PaperMeltScene {
     pub async fn new() -> Self {
         let image = load_texture(*globals::LOGO_FILEPATH).await.unwrap();
 
@@ -25,7 +25,7 @@ impl ColourScene {
         let material = load_material(
             ShaderSource::Glsl {
                 vertex: DEFAULT_VERTEX_SHADER,
-                fragment: COLORFUL_FRAGMENT_SHADER,
+                fragment: PAPER_MELT_FRAGMENT_SHADER,
             },
             MaterialParams {
                 pipeline_params,
@@ -44,7 +44,7 @@ impl ColourScene {
         let render_target = render_target(render_width as u32, render_height as u32);
 
         Self { 
-            image, 
+            image,
             material, 
             time: 0.0,
             render_target,
@@ -54,15 +54,13 @@ impl ColourScene {
     }
 }
 
-impl Scene for ColourScene {
+impl Scene for PaperMeltScene {
     fn update(&mut self) {
-        // Update time
         self.time += get_frame_time();
 
-        // Update scene based on audio data
+        // Sync with beats, add randomness
         if *globals::BEAT_DETECTED.lock().unwrap() == true {
-            // Do thing
-            self.time = gen_range(0.0, 10.0);
+            self.time = gen_range(0.0, 100.0);
 
             let mut beat_detected = globals::BEAT_DETECTED.lock().unwrap();
             *beat_detected = false;
@@ -70,7 +68,7 @@ impl Scene for ColourScene {
     }
 
     fn draw(&mut self) {
-        // Set camera to render target
+        // Set camera to the render target for feedback loop
         set_camera(&Camera2D {
             zoom: vec2(2.0 / self.render_width, 2.0 / self.render_height),
             target: vec2(self.render_width / 2.0, self.render_height / 2.0),
@@ -78,12 +76,12 @@ impl Scene for ColourScene {
             ..Default::default()
         });
 
-        clear_background(LIGHTGRAY);
+        clear_background(BLACK);
 
         // Use the custom material
         gl_use_material(&self.material);
 
-        let texture_size = vec2(self.image.width() as f32, self.image.height() as f32);
+        let texture_size = vec2(self.render_width, self.render_height);
         self.material.set_uniform("TextureSize", texture_size);
         self.material.set_uniform("Time", self.time);
 
@@ -102,7 +100,7 @@ impl Scene for ColourScene {
         // Use the default material
         gl_use_default_material();
 
-        // Reset camera to draw to the screen
+        // Reset camera to the screen
         set_default_camera();
         clear_background(WHITE);
 
@@ -120,23 +118,50 @@ impl Scene for ColourScene {
     }
 }
 
-// TODO: Move shaders to a separate file
-const COLORFUL_FRAGMENT_SHADER: &'static str = "#version 100
+// The trippy, crazy fragment shader with noise and feedback effects
+const PAPER_MELT_FRAGMENT_SHADER: &'static str = "#version 100
 precision lowp float;
 
 varying vec2 uv;
 
-uniform sampler2D Texture;
 uniform vec2 TextureSize;
 uniform float Time;
+uniform sampler2D Texture;
+
+float cosRange(float amt, float range, float minimum) {
+    return (((1.0 + cos(amt * 3.14159 / 180.0)) * 0.5) * range) + minimum;
+}
 
 void main() {
+    vec2 uv = gl_FragCoord.xy / TextureSize;
+    vec2 p = (2.0 * gl_FragCoord.xy - TextureSize) / max(TextureSize.x, TextureSize.y);
+    
+    float ct = cosRange(Time * 5.0, 3.0, 1.1);
+    float xBoost = cosRange(Time * 0.2, 5.0, 5.0);
+    float yBoost = cosRange(Time * 0.1, 10.0, 5.0);
+    float fScale = cosRange(Time * 15.5, 1.25, 0.5);
+
+    for (int i = 1; i < 40; i++) {
+        float _i = float(i);
+        vec2 newp = p;
+        newp.x += 0.2 / _i * sin(_i * p.y + Time * cos(ct) * 0.5 / 20.0 + 0.005 * _i) * fScale + xBoost; 
+        newp.y += 0.2 / _i * sin(_i * p.x + Time * ct * 0.3 / 40.0 + 0.03 * float(i + 15)) * fScale + yBoost;
+        p = newp;
+    }
+
+    vec3 col = vec3(
+        0.5 * sin(3.0 * p.x) + 0.5,
+        0.5 * sin(3.0 * p.y) + 0.5,
+        sin(p.x + p.y)
+    );
+    col *= 0.975;
+
+    // Add border
+    float extrusion = (col.x + col.y + col.z) / 4.0;
+    extrusion *= 1.5;
+    
     vec4 textureColor = texture2D(Texture, uv);
-    float r = 0.5 + 0.5 * sin(Time + 0.0);
-    float g = 0.5 + 0.5 * sin(Time + 2.0);
-    float b = 0.5 + 0.5 * sin(Time + 4.0);
-    vec4 backgroundColor = vec4(r, g, b, 1.0);
-    gl_FragColor = mix(backgroundColor, textureColor, textureColor.a);
+    gl_FragColor = vec4(col, extrusion) + textureColor * 0.5;
 }
 ";
 
