@@ -3,10 +3,24 @@ use crate::scene_manager::SceneManager;
 use macroquad::prelude::*;
 
 pub async fn handle_input(scene_manager: &mut SceneManager) {
+    // Handle beat detection toggle
     if is_key_pressed(KeyCode::Space) {
         let mut beat_detection_enabled = globals::BEAT_DETECTION_ENABLED.lock().unwrap();
         *beat_detection_enabled = !*beat_detection_enabled;
         println!("Beat detection enabled: {}", *beat_detection_enabled);
+    }
+
+    // Handle sensitivity adjustment
+    if is_key_pressed(KeyCode::Up) {
+        let mut sensitivity = globals::SENSITIVITY.lock().unwrap();
+        *sensitivity += 0.05;
+        println!("Increased sensitivity to {}", *sensitivity);
+    }
+
+    if is_key_pressed(KeyCode::Down) {
+        let mut sensitivity = globals::SENSITIVITY.lock().unwrap();
+        *sensitivity -= 0.05;
+        println!("Decreased sensitivity to {}", *sensitivity);
     }
 
     // Handle scene switching
@@ -21,6 +35,7 @@ pub async fn handle_input(scene_manager: &mut SceneManager) {
         }
     }
 
+    // Handle fullscreen toggle
     let mut is_fullscreen = globals::IS_FULLSCREEN.lock().unwrap();
 
     if is_key_pressed(KeyCode::F11) {

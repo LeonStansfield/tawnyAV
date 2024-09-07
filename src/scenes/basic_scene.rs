@@ -104,7 +104,7 @@ impl Scene for BasicScene {
 }
 
 // TODO: Move shaders to a separate file
-const DEFAULT_FRAGMENT_SHADER: &'static str = "#version 100
+const DEFAULT_FRAGMENT_SHADER: &'static str = "#version 120
 precision lowp float;
 
 varying vec2 uv;

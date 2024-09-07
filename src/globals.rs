@@ -9,5 +9,6 @@ lazy_static! {
     pub static ref IS_FULLSCREEN: Mutex<bool> = Mutex::new(true);
     pub static ref BEAT_DETECTION_ENABLED: Mutex<bool> = Mutex::new(true);
     pub static ref BEAT_DETECTED: Mutex<bool> = Mutex::new(false);
+    pub static ref SENSITIVITY: Mutex<f32> = Mutex::new(1.5);
     pub static ref LOGO_FILEPATH: &'static str = "resources/wyr_logo.png";
 }

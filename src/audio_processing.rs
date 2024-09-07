@@ -44,7 +44,6 @@ fn run_stream<T>(
 where
     T: cpal::Sample + cpal::SizedSample + dasp::Sample + dasp::sample::ToSample<f32>,
 {
-    let peak_threshold_multiplier: f32 = 1.5; // Multiplier for dynamic threshold
     let cooldown_time = Duration::from_millis(300); // 300 ms cooldown between peaks
     let rolling_window_size = 50; // Size of the rolling window for average energy
 
@@ -62,6 +61,7 @@ where
             let mut energy_queue = energy_queue_clone.lock().unwrap();
             let mut last_beat_time = last_beat_time_clone.lock().unwrap();
             let beat_detection_enabled = globals::BEAT_DETECTION_ENABLED.lock().unwrap();
+            let sensitivity = *globals::SENSITIVITY.lock().unwrap();
 
             if !*beat_detection_enabled {
                 return;
@@ -81,7 +81,7 @@ where
             energy_queue.push_back(energy);
 
             let avg_energy: f32 = energy_queue.iter().sum::<f32>() / energy_queue.len() as f32;
-            let dynamic_threshold = avg_energy * peak_threshold_multiplier;
+            let dynamic_threshold = avg_energy * sensitivity;
 
             let current_time = Instant::now();
             if energy > dynamic_threshold && current_time.duration_since(*last_beat_time) > cooldown_time {
