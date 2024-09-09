@@ -9,5 +9,11 @@ uniform float Seed;
 uniform sampler2D Texture;
 
 void main() {
-    gl_FragColor = texture2D(Texture, uv);
+    // Make background black by setting the alpha to 1 and RGB to 0
+    vec4 texColor = texture2D(Texture, uv);
+    if (texColor.a == 0.0) {
+        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+    } else {
+        gl_FragColor = texColor;
+    }
 }

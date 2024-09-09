@@ -41,6 +41,11 @@ impl SceneParams {
             },
             MaterialParams {
                 pipeline_params,
+                uniforms: vec![
+                    UniformDesc::new("TextureSize", UniformType::Float2),
+                     UniformDesc::new("Seed", UniformType::Float2),
+                    UniformDesc::new("Time", UniformType::Float1),
+                ],
                 ..Default::default()
             },
         )
