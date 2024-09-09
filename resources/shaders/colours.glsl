@@ -3,9 +3,10 @@ precision lowp float;
 
 varying vec2 uv;
 
-uniform sampler2D Texture;
 uniform vec2 TextureSize;
 uniform float Time;
+uniform float Seed;
+uniform sampler2D Texture;
 
 // Palette represents points of a gradient of colours to use
 const vec3 Palette[13] = vec3[13](

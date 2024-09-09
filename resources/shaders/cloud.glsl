@@ -5,6 +5,7 @@ varying vec2 uv;
 
 uniform vec2 TextureSize;
 uniform float Time;
+uniform float Seed;
 uniform sampler2D Texture;
 
 const float cloudscale = 1.1;

@@ -5,6 +5,7 @@ varying vec2 uv;
 
 uniform vec2 TextureSize;
 uniform float Time;
+uniform float Seed;
 uniform sampler2D Texture;
 
 // Palette represents points of a gradient of colours to use
