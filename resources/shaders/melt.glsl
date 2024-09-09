@@ -62,8 +62,8 @@ void main() {
     vec2 p = (2.0 * gl_FragCoord.xy - TextureSize) / max(TextureSize.x, TextureSize.y);
     
     float ct = cosRange(Time * (5.0 + hash(1.0)), 3.0, 1.1);
-    float xBoost = cosRange(Time * (0.2 + hash(2.0)), 5.0, 5.0);
-    float yBoost = cosRange(Time * (0.1 + hash(3.0)), 10.0, 5.0);
+    float xBoost = cosRange(Time * (0.2 + hash(2.0)), 50.0, 5.0);
+    float yBoost = cosRange(Time * (0.1 + hash(3.0)), 200.0, 5.0);
     float fScale = cosRange(Time * (15.5 + hash(4.0)), 1.25, 0.5);
 
     for (int i = 1; i < 40; i++) {

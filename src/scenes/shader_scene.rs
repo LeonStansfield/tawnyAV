@@ -5,7 +5,7 @@ use std::io::Read;
 use crate::scene::Scene;
 use crate::globals;
 
-pub struct SceneParams {
+pub struct ShaderScene {
     image: Texture2D,
     material: Material,
     time: f32,
@@ -22,7 +22,7 @@ fn load_shader_str(shader_str: &str) -> String {
     shader
 }
 
-impl SceneParams {
+impl ShaderScene {
     pub async fn new(fragment_shader_filepath: &str) -> Self {
         let image = load_texture(*globals::LOGO_FILEPATH).await.unwrap();
 
@@ -68,7 +68,7 @@ impl SceneParams {
     }
 }
 
-impl Scene for SceneParams {
+impl Scene for ShaderScene {
     fn update(&mut self) {
         self.time += get_frame_time();
 
