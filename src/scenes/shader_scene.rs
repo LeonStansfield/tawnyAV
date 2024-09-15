@@ -9,7 +9,7 @@ pub struct ShaderScene {
     image: Texture2D,
     material: Material,
     time: f32,
-    seed: f32,
+    seed: f64,
     render_target: RenderTarget,
     render_width: f32,
     render_height: f32,

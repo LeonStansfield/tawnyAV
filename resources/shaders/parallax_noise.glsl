@@ -11,7 +11,7 @@ uniform sampler2D Texture;
 #define CHANGE_S -2.0
 #define N 10.0
 
-#define COL vec3(143, 57, 143) / 255.0
+#define COL vec3(171, 55, 112) / 255.0
 
 // Original noise code from https://www.shadertoy.com/view/4sc3z2
 #define MOD3 vec3(.1031, .11369, .13787)

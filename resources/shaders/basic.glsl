@@ -1,4 +1,4 @@
-#version 100
+#version 120
 precision lowp float;
 
 varying vec2 uv;
