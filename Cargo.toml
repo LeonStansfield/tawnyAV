@@ -6,6 +6,8 @@ edition = "2021"
 [dependencies]
 # Rendering, window management, and input
 macroquad = "0.4.13"
+ffmpeg-next = "7.0.4"
+image = "0.24"
 # Audio processing
 cpal = "0.15"
 dasp = "0.11"

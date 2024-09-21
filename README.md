@@ -7,6 +7,7 @@ Tawny AV is a rust based audio visual software to display dynamic visualizations
 ## Installation
 - If you havent got rust installed already, install rust by following the instructions at [rustup.rs](https://rustup.rs/)
 - Clone the repository with `git clone https://github.com/LeonStansfield/tawnyAV.git`
+- Ensure the FFMPEG system libraries are installed. See the [ffmpeg-next crate instructions for this](https://github.com/zmwangx/rust-ffmpeg/wiki/Notes-on-building#dependencies)
 - Run the program with `cargo run --release`
 
 ## Usage
