@@ -6,9 +6,11 @@ mod scene;
 mod scenes;
 mod scene_manager;
 mod input;
+mod ui; // Add the UI module
 pub mod globals;
 
 use scene_manager::SceneManager;
+use ui::UI;
 
 #[macroquad::main("TawnyAV")]
 async fn main() {
@@ -23,16 +25,27 @@ async fn main() {
     let scenes = scenes::get_scenes().await;
     let mut scene_manager = SceneManager::new(scenes);
 
+    // Initialize UI
+    let mut ui = UI::new();
+
     loop {
         let frame_start = Instant::now();
 
         input::handle_input(&mut scene_manager).await;
+
+        // Handle UI toggle
+        if is_key_pressed(KeyCode::H) {
+            ui.toggle_visibility();
+        }
 
         clear_background(WHITE);
 
         // Update and draw the current scene
         scene_manager.update();
         scene_manager.draw();
+
+        // Draw the UI
+        ui.draw();
 
         next_frame().await;
 
