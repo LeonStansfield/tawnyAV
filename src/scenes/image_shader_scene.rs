@@ -6,6 +6,7 @@ use crate::scene::Scene;
 use crate::globals::{self};
 
 pub struct ShaderScene {
+    scene_name: String,
     image: Texture2D,
     material: Material,
     time: f32,
@@ -23,7 +24,7 @@ fn load_shader_str(shader_str: &str) -> String {
 }
 
 impl ShaderScene {
-    pub async fn new(fragment_shader_filepath: &str) -> Self {
+    pub async fn new(scene_name: String, fragment_shader_filepath: &str) -> Self {
         let image_path = globals::IMAGE_FILEPATH.lock().unwrap();
         let image = load_texture(image_path.as_str()).await.unwrap();
 
@@ -57,7 +58,8 @@ impl ShaderScene {
         let render_height = *globals::RENDER_HEIGHT.lock().unwrap();
         let render_target = render_target(render_width as u32, render_height as u32);
 
-        Self { 
+        Self {
+            scene_name,
             image,
             material, 
             time: 0.0,
@@ -67,6 +69,7 @@ impl ShaderScene {
             render_height,
         }
     }
+    
 }
 
 impl Scene for ShaderScene {
@@ -141,6 +144,10 @@ impl Scene for ShaderScene {
                 ..Default::default()
             },
         );
+    }
+
+    fn get_name(&self) -> &str {
+        &self.scene_name
     }
 }
 

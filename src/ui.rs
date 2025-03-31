@@ -43,19 +43,25 @@ impl UI {
             .movable(true)
             .ui(&mut *root_ui(), |ui| {
                 ui.label(None, "Scene Selection");
-                ui.separator();
-                if !scene_manager.scenes.is_empty() {
-                    let scene_labels: Vec<String> = (0..scene_manager.scenes.len())
-                        .map(|i| format!("Scene {}", i + 1))
-                        .collect();
-                    let scene_label_slices: Vec<&str> = scene_labels.iter().map(|s| s.as_str()).collect();
-                    let current_label = scene_labels.get(scene_manager.current_scene).map_or("Select Scene", |s| s.as_str());
-                    ComboBox::new(hash!("scene_select"), &scene_label_slices)
-                        .label(current_label)
-                        .ui(ui, &mut scene_manager.current_scene);
-                } else {
-                    ui.label(None, "No scenes loaded.");
-                }
+            ui.separator();
+            if !scene_manager.scenes.is_empty() {
+                let scene_labels: Vec<String> = scene_manager.scenes
+                    .iter()
+                    .map(|scene| scene.get_name().to_string())
+                    .collect();
+                
+                let scene_label_slices: Vec<&str> = scene_labels.iter().map(|s| s.as_str()).collect();
+                let current_label = scene_labels.get(scene_manager.current_scene)
+                    .map_or("Select Scene", |s| s.as_str());
+
+                ComboBox::new(hash!("scene_select"), &scene_label_slices)
+                    .label(current_label)
+                    .ui(ui, &mut scene_manager.current_scene);
+            } else {
+                ui.label(None, "No scenes loaded.");
+            }
+
+
                 ui.separator();
                 ui.label(None, "Toggle Beat Detection:");
                 let mut beat_detection_enabled = *BEAT_DETECTION_ENABLED.lock().unwrap();
