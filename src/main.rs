@@ -45,7 +45,7 @@ async fn main() {
         scene_manager.draw();
 
         // Draw the UI
-        ui.draw();
+        ui.draw(&mut scene_manager).await;
 
         next_frame().await;
 

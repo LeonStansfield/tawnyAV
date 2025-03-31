@@ -1,8 +1,9 @@
 use crate::scene::Scene;
+use crate::scenes;
 
 pub struct SceneManager {
-    scenes: Vec<Box<dyn Scene>>,
-    current_scene: usize,
+    pub scenes: Vec<Box<dyn Scene>>,
+    pub current_scene: usize,
 }
 
 impl SceneManager {
@@ -25,5 +26,11 @@ impl SceneManager {
 
     pub fn draw(&mut self) {
         self.scenes[self.current_scene].draw();
+    }
+
+    pub async fn reload_scenes(&mut self) {
+        print!("Reloading scenes...");
+        self.scenes = scenes::get_scenes().await;
+        self.current_scene = 0; // Reset to the first scene
     }
 }

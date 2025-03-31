@@ -12,14 +12,24 @@ Tawny AV is a rust based audio visual software to display dynamic visualizations
 
 ## Usage
 - Run the program with `cargo run --release`
+- Press H to toggle the UI
 - Press `F11` to toggle fullscreen
 - Press the number keys `1-9` to switch between different visualizations
 - Press `Space` to stop the beat detection
-- Press the `Up` and `Down` arrow keys to adjust the sensitivity of the beat detection --  Not implemented yet
+- Press the `Up` and `Down` arrow keys to adjust the sensitivity of the beat detection
 
 ## Todo
-- Modify the paper melt scene so that it is more visually appealing, with the logo more integrated, fits a set colour scheme and adapts to the beat of the music
-- Modify the cloud scene so that it fits a set colour scheme, with the logo integrated and adapts to the beat of the music
+- Scenes:
+     - Create 10 full scenes
+        - Game of life scene
+     - Make scenes dynamically loaded from resources folder (with names), so users can add their own scenes
+- Improved functionality of the UI:
+    - Save settings presets
+    - Chose audio input device
+    - Modify and change colour palettes
+
+    - Add warning to UI (warnings will show in the window instead of console, and will not crash the program)
+
 - Add support to play videos and apply shader effects to videos
 
 ## Bugs

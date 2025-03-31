@@ -14,12 +14,18 @@ pub async fn handle_input(scene_manager: &mut SceneManager) {
     if is_key_pressed(KeyCode::Up) {
         let mut sensitivity = globals::SENSITIVITY.lock().unwrap();
         *sensitivity += 0.05;
+        if *sensitivity > 5.0 {
+            *sensitivity = 5.0;
+        }
         println!("Increased sensitivity to {}", *sensitivity);
     }
 
     if is_key_pressed(KeyCode::Down) {
         let mut sensitivity = globals::SENSITIVITY.lock().unwrap();
         *sensitivity -= 0.05;
+        if *sensitivity < 0.1 {
+            *sensitivity = 0.1;
+        }
         println!("Decreased sensitivity to {}", *sensitivity);
     }
 

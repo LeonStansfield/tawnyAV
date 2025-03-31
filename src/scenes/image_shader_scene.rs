@@ -3,7 +3,7 @@ use macroquad::rand::gen_range;
 use std::fs::File;
 use std::io::Read;
 use crate::scene::Scene;
-use crate::globals;
+use crate::globals::{self};
 
 pub struct ShaderScene {
     image: Texture2D,
@@ -24,7 +24,8 @@ fn load_shader_str(shader_str: &str) -> String {
 
 impl ShaderScene {
     pub async fn new(fragment_shader_filepath: &str) -> Self {
-        let image = load_texture(*globals::IMAGE_FILEPATH).await.unwrap();
+        let image_path = globals::IMAGE_FILEPATH.lock().unwrap();
+        let image = load_texture(image_path.as_str()).await.unwrap();
 
         let pipeline_params = PipelineParams {
             depth_write: true,

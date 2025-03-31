@@ -61,7 +61,7 @@ where
             let mut energy_queue = energy_queue_clone.lock().unwrap();
             let mut last_beat_time = last_beat_time_clone.lock().unwrap();
             let beat_detection_enabled = globals::BEAT_DETECTION_ENABLED.lock().unwrap();
-            let sensitivity = *globals::SENSITIVITY.lock().unwrap();
+            let sensitivity = 5.0 - *globals::SENSITIVITY.lock().unwrap();
 
             if !*beat_detection_enabled {
                 return;
