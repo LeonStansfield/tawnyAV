@@ -12,13 +12,13 @@ Tawny AV is an audio-visual software built in Rust that generates dynamic visual
  - Users with GLSL knowledge can implement their own shader effects to expand on the visuals.
 
 ## Examples
-![Gif showing 4 shaders running in TawnyAV with the beat detection turned off](resources/docs/demo1.gif)
+![Gif showing 4 shaders running in TawnyAV with the beat detection turned off](resources/readme/demo1.gif)
 
-![Screenshot showing UI and melt scene](resources/docs/melt.png)
+![Screenshot showing UI and melt scene](resources/readme/melt.png)
 
-![Screenshot showing UI and parallax scene](resources/docs/parallax.png)
+![Screenshot showing UI and parallax scene](resources/readme/parallax.png)
 
-![Screenshot showing UI and the kbmarcher scene](resources/docs/marcher.png)
+![Screenshot showing UI and the kbmarcher scene](resources/readme/marcher.png)
 
 ## Usage Guide
 
@@ -60,20 +60,17 @@ Custom shaders:
 - If you havent got rust installed already, install rust by following the instructions at [rustup.rs](https://rustup.rs/)
 - Clone the repository with `git clone https://github.com/LeonStansfield/tawnyAV.git`
 - Run the program with `cargo run --release`
+- See documentation in `docs/docs.md`.
 
 ## Project Plan
 - Scenes:
      - Create 10 full scenes
-        - Game of life scene
-     - Make scenes dynamically loaded from resources folder (with names), so users can add their own scenes
+        - Game of life scene - image_CPU_scene.rs
 - Improved functionality of the UI:
     - Chose audio input device
-    - Modify and change colour palettes
-    - Save settings to be automatically loaded next time.
-    - Add warning to UI (warnings will show in the window instead of console, and will not crash the program)
-- Left and Right arrow keys to change scenes as well as numbers
-
-- Add support to play videos and apply shader effects to videos
+- Default Global settings savable to resources for user modification - this should be loaded on startup into the program
+- Add support to play videos and apply shader effects to videos - video_shader_scene.rs?
 
 ## Known Bugs
  - When pressing f11 for fullscreen, the window goes fullscreen but always on the primary monitor. This should be on the monitor the window is currently on.
+ - Fullscreen not functional on Linux
