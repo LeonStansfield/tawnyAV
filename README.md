@@ -12,7 +12,13 @@ Tawny AV is an audio-visual software built in Rust that generates dynamic visual
  - Users with GLSL knowledge can implement their own shader effects to expand on the visuals.
 
 ## Examples
- - GIF example of the software running here.
+![Gif showing 4 shaders running in TawnyAV with the beat detection turned off](resources/docs/demo1.gif)
+
+![Screenshot showing UI and melt scene](resources/docs/melt.png)
+
+![Screenshot showing UI and parallax scene](resources/docs/parallax.png)
+
+![Screenshot showing UI and the kbmarcher scene](resources/docs/marcher.png)
 
 ## Usage Guide
 
@@ -26,9 +32,9 @@ For live AV shows, you may want to modify these without showing the GUI, I recco
 Keyboard Shortcuts:
 H - Toggle the UI
 F11 - Toggle fullscreen
-1-9 - Switch between different visualizations
+1-9 and Left/Right Arrows - Switch between different visualizations
 Space - Toggle beat detection
-Up/Down Arrow - Adjust beat detection sensitivity
+Up/Down Arrows - Adjust beat detection sensitivity
 
 ### Advanced Usage
 
@@ -39,12 +45,14 @@ Custom backgroung image:
      - Ensure the image is somewhere where you are able to locate it relative to the programs location (I reccomend inside the resources/images directory)
      - In the GUI, modify the file path to point towards your images location
      - Click 'reload scenes'. This will reload the scenes with your custom image applied.
-     - If you want to apply these 
+     - If you want this to be the default logo used on starting the program, simply modify
 Custom colour palette:
-      - Colour palletes are stored in theresources/pallete.txt file.
-      - En
+      - Colour palletes for each shader are stored in each individual shader file. These colours can be modified to your liking, but for your reference, I have left a copy of the default colour palette in the shader in the resources folder.
 
 Custom shaders:
+      - Users can add their own custom shaders.
+      - Simply add a working fragment shader contained in a .glsl file to the resources/shaders directory.
+      - WARNINGL The shader must be a working fragment shader, if the shader does not compile, the program will not start.
 
 ## Developers
 

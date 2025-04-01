@@ -133,7 +133,7 @@ impl UI {
                     ui.label(None, "Down Arrow: Decrease sensitivity");
                     ui.label(None, "Space: Toggle beat detection");
                     ui.label(None, "F11: Toggle fullscreen");
-                    ui.label(None, "1-9: Change scene");
+                    ui.label(None, "1-9 and Left/Right Arrows: Change scene");
                 });
         }
 

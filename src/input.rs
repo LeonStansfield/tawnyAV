@@ -29,7 +29,7 @@ pub async fn handle_input(scene_manager: &mut SceneManager) {
         println!("Decreased sensitivity to {}", *sensitivity);
     }
 
-    // Handle scene switching
+    // Handle scene switching with number keys
     const DIGIT_KEYS: [KeyCode; 10] = [
         KeyCode::Key1, KeyCode::Key2, KeyCode::Key3, KeyCode::Key4, KeyCode::Key5,
         KeyCode::Key6, KeyCode::Key7, KeyCode::Key8, KeyCode::Key9, KeyCode::Key0,
@@ -39,6 +39,21 @@ pub async fn handle_input(scene_manager: &mut SceneManager) {
         if is_key_pressed(key) {
             scene_manager.switch_scene(i);
         }
+    }
+
+    // Handle scene switching with left and right arrow keys
+    if is_key_pressed(KeyCode::Right) {
+        let next_scene = (scene_manager.current_scene + 1) % scene_manager.scenes.len();
+        scene_manager.switch_scene(next_scene);
+    }
+
+    if is_key_pressed(KeyCode::Left) {
+        let prev_scene = if scene_manager.current_scene == 0 {
+            scene_manager.scenes.len() - 1
+        } else {
+            scene_manager.current_scene - 1
+        };
+        scene_manager.switch_scene(prev_scene);
     }
 
     // Handle fullscreen toggle
