@@ -17,7 +17,7 @@ Tawny AV is an audio-visual software built in Rust that is designed to display d
 
 ![Screenshot showing UI and melt scene](resources/readme/melt.png)
 
-![Screenshot showing UI and parallax scene](resources/readme/parallax.png)
+![Screenshot showing UI and parallax scene](resources/readme/depthnoise.png)
 
 ![Screenshot showing UI and the kbmarcher scene](resources/readme/marcher.png)
 
@@ -39,22 +39,37 @@ Up/Down Arrows - Adjust beat detection sensitivity
 
 ### Advanced Usage
 
-#### Customising your Shader Scene Visuals:
+#### Customising your visuals:
 Custom backgroung image:
 - To add your own logo/image to the visuals first ensure the image file is in the correct format:
 - Image file formatting guide here (image must be 1920x1080, white on transparrent background, png).
 - Ensure the image is somewhere where you are able to locate it relative to the programs location (I reccomend inside the resources/images directory)
 - In the GUI, modify the file path to point towards your images location
 - Click 'reload scenes'. This will reload the scenes with your custom image applied.
-- If you want this to be the default logo used on starting the program, simply modify
 
 Custom colour palette:
-- Colour palletes for each shader are stored in each individual shader file. These colours can be modified to your liking, but for your reference, I have left a copy of the default colour palette in the shader in the resources folder.
+- Colour palletes for each shader are stored in each individual shader file. These colours can be modified to your liking, but for your reference, I have left a copy of the default colour palette in the shader in the resources/shaders/palette.txt file.
 
 Custom shaders:
 - Users can add their own custom shaders.
 - Simply add a working fragment shader contained in a .glsl file to the resources/shaders directory.
 - WARNINGL The shader must be a working fragment shader, if the shader does not compile, the program will not start.
+
+#### Custom Parameters:
+- Upon starting the program, TawnyAV will look for a 'tawny-av-params.txt' parameters file.
+- This file contains global parameters that are used throughout the program.
+- Modifying the parameters in this file will modify the global parameters when the program starts. This can be useful for setting up a default configuration for TawnyAV (for example, the image file path of your logo).
+- The parameters are as follows:
+```
+SCREEN_WIDTH=854.0
+SCREEN_HEIGHT=480.0
+RENDER_WIDTH=1920.0
+RENDER_HEIGHT=1920.0
+IS_FULLSCREEN=false
+BEAT_DETECTION_ENABLED=true
+SENSITIVITY=3.0
+IMAGE_FILEPATH=resources/images/logo.png
+```
 
 ## Developers
 

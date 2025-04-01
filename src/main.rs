@@ -6,7 +6,7 @@ mod scene;
 mod scenes;
 mod scene_manager;
 mod input;
-mod ui; // Add the UI module
+mod ui;
 pub mod globals;
 
 use scene_manager::SceneManager;
@@ -14,6 +14,9 @@ use ui::UI;
 
 #[macroquad::main("TawnyAV")]
 async fn main() {
+    // Load parameters from file
+    globals::load_params_from_file("resources/tawny-av-params.txt");
+
     // Initialize window
     request_new_screen_size(*globals::SCREEN_WIDTH.lock().unwrap(), *globals::SCREEN_HEIGHT.lock().unwrap());
     let frame_duration = Duration::from_secs_f32(1.0 / 30.0);
