@@ -1,11 +1,12 @@
 # Tawny AV
 
 ## Description
-Tawny AV is an audio-visual software built in Rust that generates dynamic visualizations based on live audio captured from a microphone. The visuals are powered by GLSL fragment shaders, which dynamically respond to detected beats in the audio input.
+Tawny AV is an audio-visual software built in Rust that is designed to display dynamic visualizations based on live audio captured from a microphone. The visuals are managed by 'scenes', which are modular components that will render visual effects to the screen, such as the image shader scene, which uses GLSL fragment shaders to create procedural visualisation. The software is designed to be modular, allowing developers to easily add new scenes and shaders.
 
 # Features
  - Real-time Audio Processing using the device’s microphone to detect beats and trigger events dynamically.
  - Detected beats are automatically aligned with visual effects for a responsive audiovisual experience.
+ - Modular scene management allows for easy addition of new visualizations.
  - GLSL fragment shaders to generate real-time visuals with smooth performance using the GPU.
  - Users can modify shaders, color palettes, and background images to create their own visuals.
  - All visual assets (images, colors, and shaders) are interchangeable and can be modified by the user
@@ -38,23 +39,26 @@ Up/Down Arrows - Adjust beat detection sensitivity
 
 ### Advanced Usage
 
-#### Customising your visuals:
+#### Customising your Shader Scene Visuals:
 Custom backgroung image:
-     - To add your own logo/image to the visuals first ensure the image file is in the correct format:
-          - Image file formatting guide here (image must be 1920x1080, white on transparrent background, png).
-     - Ensure the image is somewhere where you are able to locate it relative to the programs location (I reccomend inside the resources/images directory)
-     - In the GUI, modify the file path to point towards your images location
-     - Click 'reload scenes'. This will reload the scenes with your custom image applied.
-     - If you want this to be the default logo used on starting the program, simply modify
+- To add your own logo/image to the visuals first ensure the image file is in the correct format:
+- Image file formatting guide here (image must be 1920x1080, white on transparrent background, png).
+- Ensure the image is somewhere where you are able to locate it relative to the programs location (I reccomend inside the resources/images directory)
+- In the GUI, modify the file path to point towards your images location
+- Click 'reload scenes'. This will reload the scenes with your custom image applied.
+- If you want this to be the default logo used on starting the program, simply modify
+
 Custom colour palette:
-      - Colour palletes for each shader are stored in each individual shader file. These colours can be modified to your liking, but for your reference, I have left a copy of the default colour palette in the shader in the resources folder.
+- Colour palletes for each shader are stored in each individual shader file. These colours can be modified to your liking, but for your reference, I have left a copy of the default colour palette in the shader in the resources folder.
 
 Custom shaders:
-      - Users can add their own custom shaders.
-      - Simply add a working fragment shader contained in a .glsl file to the resources/shaders directory.
-      - WARNINGL The shader must be a working fragment shader, if the shader does not compile, the program will not start.
+- Users can add their own custom shaders.
+- Simply add a working fragment shader contained in a .glsl file to the resources/shaders directory.
+- WARNINGL The shader must be a working fragment shader, if the shader does not compile, the program will not start.
 
 ## Developers
+
+Tawny AV is designed to be modular, allowing users to implement other scene types.
 
 ### Installation
 - If you havent got rust installed already, install rust by following the instructions at [rustup.rs](https://rustup.rs/)
@@ -64,11 +68,24 @@ Custom shaders:
 
 ## Project Plan
 - Scenes:
-     - Create 10 full scenes
-        - Game of life scene - image_CPU_scene.rs
+     - Create 10 visualisations in total
+
+     - Shader scene
+     - Cellular automata scene
+          - Takes params: SpawnChange, RuleSet, Image (used to initialise the grid), Type (game of life, wireworld, etc)
+     - Video scene
+          - Simply plays a video file
+          - Takes params: Video file
+
 - Improved functionality of the UI:
     - Chose audio input device
 - Default Global settings savable to resources for user modification - this should be loaded on startup into the program
+     - global_params.txt
+
+- Proper scene description file (.tsd) for each scene.
+     - Instead of tawnyAV dynamically createing a scene for each shader, maybe we could create a scene description file that is dynamically loaded on startup.
+     - This would allow for multiple types of scenes (shader, image, cellular automata, etc) to be created by the user and loaded at runtime.
+
 - Add support to play videos and apply shader effects to videos - video_shader_scene.rs?
 
 ## Known Bugs
