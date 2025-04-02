@@ -31,11 +31,11 @@ Basic settings (Beat detection, audio processing sensitivity, scene selection an
 For live AV shows, you may want to modify these without showing the GUI, I reccomend learning the following shortcuts to modify basic settings on the fly:
 
 Keyboard Shortcuts:
-H - Toggle the UI
-F11 - Toggle fullscreen
-1-9 and Left/Right Arrows - Switch between different visualizations
-Space - Toggle beat detection
-Up/Down Arrows - Adjust beat detection sensitivity
+- H - Toggle the UI
+- F11 - Toggle fullscreen
+- 1-9 and Left/Right Arrows - Switch between different visualizations
+- Space - Toggle beat detection
+- Up/Down Arrows - Adjust beat detection sensitivity
 
 ### Advanced Usage
 
@@ -56,7 +56,7 @@ Custom shaders:
 - WARNINGL The shader must be a working fragment shader, if the shader does not compile, the program will not start.
 
 #### Custom Parameters:
-- Upon starting the program, TawnyAV will look for a 'tawny-av-params.txt' parameters file.
+- Upon starting the program, TawnyAV will look for a [tawny-av-params.txt](tawny-av-params) parameters file.
 - This file contains global parameters that are used throughout the program.
 - Modifying the parameters in this file will modify the global parameters when the program starts. This can be useful for setting up a default configuration for TawnyAV (for example, the image file path of your logo).
 - The parameters are as follows:
@@ -87,15 +87,15 @@ Tawny AV is designed to be modular, allowing users to implement other scene type
 
      - Shader scene
      - Cellular automata scene
-          - Takes params: SpawnChange, RuleSet, Image (used to initialise the grid), Type (game of life, wireworld, etc)
+          - Add parameters:
+               - Image filled: Filled, Inverted, No
+               - Simulation speed (float 0 - 1)
      - Video scene
           - Simply plays a video file
           - Takes params: Video file
 
 - Improved functionality of the UI:
     - Chose audio input device
-- Default Global settings savable to resources for user modification - this should be loaded on startup into the program
-     - global_params.txt
 
 - Proper scene description file (.tsd) for each scene.
      - Instead of tawnyAV dynamically createing a scene for each shader, maybe we could create a scene description file that is dynamically loaded on startup.

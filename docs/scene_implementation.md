@@ -29,4 +29,26 @@ If you want to add new shaders, TawnyAV will automatically create a new scene fo
 
 ## `cellular_automata_scene`
 
-The [`cellular_automata_scene`](../src/scenes/cellular_automata_scene.rs) module provides an implementation of the `Scene` trait that runs Conway's Game of Life. This scene runs entirely on the CPU and dynamically responds to beat detection by randomizing the grid.
+The [`cellular_automata_scene`](../src/scenes/cellular_automata_scene.rs) provides an implementation of the `Scene` trait that runs cellular automata simulations, such as Conway's Game of Life. This scene runs entirely on the CPU and dynamically responds to beat detection by randomizing the grid, the loaded image will be used to influence the initial state of the grid, so your image can be seen through the simulation.
+
+### Creating a New Cellular Automata Scene
+
+To create a new cellular automata scene, you need to create a new `.txt` file in the `resources/cellular_automata` directory. The file should contain the rules for the cellular automata simulation.
+
+### Text File Format
+
+Each `.txt` file in the `resources/cellular_automata` directory must follow this format:
+
+B36/S23/L5
+A:R185,G91,B137
+D:R78,G10,B10
+SC:0.47
+
+Where:
+- The first line contains the rules for the cellular automata simulation in the format `B{birth rules}/S{survival rules}/L{lifetime}`.
+- The second line contains the color for the alive cells in the format `A:R{red},G{green},B{blue}`.
+- The third line contains the color for the dead cells in the format `D:R{red},G{green},B{blue}`.
+- The fourth line contains the spawn chance in the format `SC: {spawn chance}`. This can be a float value between 0 and 1, where 0 is no chance and 1 is a guaranteed spawn.
+
+The lifetime is the number of frames the cell will remain alive before dying.
+If the lifetime is more than 1, the two colors will be blended together to create a gradient effect.
