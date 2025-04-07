@@ -8,7 +8,9 @@ Tawny AV is an audio-visual software built in Rust that is designed to display d
  - Detected beats are automatically aligned with visual effects for a responsive audiovisual experience.
  - Modular scene management allows for easy addition of new visualizations.
  - GLSL fragment shaders to generate real-time visuals with smooth performance using the GPU.
- - Users can modify shaders, color palettes, and background images to create their own visuals.
+ - CPU based simulations are also supported, such as cellular automata.
+ - Resources are dynamically loaded at runtime, allowing for easy modification of visuals.
+ - Users can modify shaders, color palettes, cellular automata, and background images to create their own visuals.
  - All visual assets (images, colors, and shaders) are interchangeable and can be modified by the user
  - Users with GLSL knowledge can implement their own shader effects to expand on the visuals.
 
@@ -20,6 +22,8 @@ Tawny AV is an audio-visual software built in Rust that is designed to display d
 ![Screenshot showing UI and parallax scene](resources/readme/depthnoise.png)
 
 ![Screenshot showing UI and the kbmarcher scene](resources/readme/marcher.png)
+
+![Screenshot showing UI and the kbmarcher scene](resources/readme/cellular_automata_1.png)
 
 ## Usage Guide
 
@@ -87,9 +91,6 @@ Tawny AV is designed to be modular, allowing users to implement other scene type
 
      - Shader scene
      - Cellular automata scene
-          - Add parameters:
-               - Image filled: Filled, Inverted, No
-               - Simulation speed (float 0 - 1)
      - Video scene
           - Simply plays a video file
           - Takes params: Video file
