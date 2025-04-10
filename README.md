@@ -15,15 +15,15 @@ Tawny AV is an audio-visual software built in Rust that is designed to display d
  - Users with GLSL knowledge can implement their own shader effects to expand on the visuals.
 
 ## Examples
-![Gif showing 4 shaders running in TawnyAV with the beat detection turned off](resources/readme/demo1.gif)
+![Gif showing 4 shaders running in TawnyAV with the beat detection turned off](readme/demo1.gif)
 
-![Screenshot showing UI and melt scene](resources/readme/melt.png)
+![Screenshot showing UI and melt scene](readme/melt.png)
 
-![Screenshot showing UI and parallax scene](resources/readme/depthnoise.png)
+![Screenshot showing UI and parallax scene](readme/depthnoise.png)
 
-![Screenshot showing UI and the kbmarcher scene](resources/readme/marcher.png)
+![Screenshot showing UI and the kbmarcher scene](readme/marcher.png)
 
-![Screenshot showing UI and the kbmarcher scene](resources/readme/cellular_automata_1.png)
+![Screenshot showing UI and the kbmarcher scene](readme/cellular_automata_1.png)
 
 ## Usage Guide
 
@@ -86,7 +86,6 @@ Tawny AV is designed to be modular, allowing users to implement their own scene 
 - In order for tawny AV to run, you will need to create a resources directory in the root of the project. This directory will contain the following subdirectories and files:
      - shaders (contains .glsl shaders used by shader scenes)
      - images (contains .png images used thoughout the program)
-     - readme (contains the resources used in the readme)
      - cellular_automata (contains the .txt files used to configure cellular automata scenes)
      - tawny-av-params.txt (contains the parameters used by tawny AV)
 - I have provieded an example resources.zip file in the repository. Unzip this directory to the root of the project to get started.
