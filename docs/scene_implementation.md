@@ -1,3 +1,11 @@
+## Resources
+
+Resources for any scene should be stored in the `resources` directory. For example, the resources directory may contain the following subdirectories:
+- `images`: Contains images used in the scenes.
+- `shaders`: Contains GLSL fragment shaders used in the `shader_scene`.
+- `cellular_automata`: Contains text files defining cellular automata rules and colors.
+- `tawny-av-params.txt`: A parameters file that contains global parameters used throughout the program.
+
 ## `image_scene`
 The [`image_scene`](../src/scenes/image_scene.rs) module provides an implementation of the `Scene` trait that displays a static image. 
 This scene mostly exists just to show how a simple scene can be implemented.

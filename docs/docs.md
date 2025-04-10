@@ -4,6 +4,12 @@
 
 TawnyAV is an audio-visual software built in Rust that generates dynamic visualizations based on live audio captured from a microphone. The visuals are powered by GLSL fragment shaders, which dynamically respond to detected beats in the audio input. The software is designed to be modular, allowing developers to easily add new scenes and shaders.
 
+## Adding a New Scene
+Tawny AV is designed to be modular, allowing for the implementation of other scene types (for example, if you wanted to expand it to use CPU based visualisations using macroquad). To add a new scene, follow these steps:
+1. Create a new Rust file in the `src/scenes/` directory.
+2. Implement the `Scene` trait for your new scene.
+3. Add your scene to the `get_scenes` function in [`mod.rs`](../src/scenes/mod.rs).
+
 ## How It Works
 
 ### 1. Audio Processing
@@ -30,9 +36,3 @@ The GUI is implemented in [`ui.rs`](../src/ui.rs) using `macroquad::ui`. It allo
 
 ### 6. Global Variables
 Global variables are defined in [`globals.rs`](../src/globals.rs) using the `lazy_static` crate. These include screen dimensions, beat detection flags, sensitivity, and the path to the current image.
-
-## Adding a New Scene
-Tawny AV is designed to be modular, allowing for the implementation of other scene types (for example, if you wanted to expand it to use CPU based visualisations using macroquad). To add a new scene, follow these steps:
-1. Create a new Rust file in the `src/scenes/` directory.
-2. Implement the `Scene` trait for your new scene.
-3. Add your scene to the `get_scenes` function in [`mod.rs`](../src/scenes/mod.rs).

@@ -32,7 +32,7 @@ Tawny AV is an audio-visual software built in Rust that is designed to display d
 Download the program from the releases section.
 Run the main executable.
 Basic settings (Beat detection, audio processing sensitivity, scene selection and image loading) can be modified using the GUI.
-For live AV shows, you may want to modify these without showing the GUI, I reccomend learning the following shortcuts to modify basic settings on the fly:
+For live AV shows, you may want to modify these without showing the GUI, I recommend learning the following shortcuts to modify basic settings on the fly:
 
 Keyboard Shortcuts:
 - H - Toggle the UI
@@ -47,7 +47,7 @@ Keyboard Shortcuts:
 Custom backgroung image:
 - To add your own logo/image to the visuals first ensure the image file is in the correct format:
 - Image file formatting guide here (image must be 1920x1080, white on transparrent background, png).
-- Ensure the image is somewhere where you are able to locate it relative to the programs location (I reccomend inside the resources/images directory)
+- Ensure the image is somewhere where you are able to locate it relative to the programs location (I recommend inside the resources/images directory)
 - In the GUI, modify the file path to point towards your images location
 - Click 'reload scenes'. This will reload the scenes with your custom image applied.
 
@@ -77,11 +77,19 @@ IMAGE_FILEPATH=resources/images/logo.png
 
 ## Developers
 
-Tawny AV is designed to be modular, allowing users to implement other scene types.
+The source code for TawnyAV is open source and available for those who want to further develop there own visuals.
+Tawny AV is designed to be modular, allowing users to implement their own scene types and other visual types.
 
 ### Installation
 - If you havent got rust installed already, install rust by following the instructions at [rustup.rs](https://rustup.rs/)
 - Clone the repository with `git clone https://github.com/LeonStansfield/tawnyAV.git`
+- In order for tawny AV to run, you will need to create a resources directory in the root of the project. This directory will contain the following subdirectories and files:
+     - shaders (contains .glsl shaders used by shader scenes)
+     - images (contains .png images used thoughout the program)
+     - readme (contains the resources used in the readme)
+     - cellular_automata (contains the .txt files used to configure cellular automata scenes)
+     - tawny-av-params.txt (contains the parameters used by tawny AV)
+- I have provieded an example resources.zip file in the repository. Unzip this directory to the root of the project to get started.
 - Run the program with `cargo run --release`
 - See documentation in `docs/docs.md`.
 
