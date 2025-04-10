@@ -1,3 +1,5 @@
+// Copyright © 2025 Leon Stansfield
+
 use macroquad::prelude::*;
 use crate::scene::Scene;
 use crate::globals;

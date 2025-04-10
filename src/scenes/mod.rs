@@ -1,3 +1,5 @@
+// Copyright © 2025 Leon Stansfield
+
 pub mod shader_scene;
 pub mod image_scene;
 pub mod cellular_automata_scene;

@@ -1,3 +1,5 @@
+Copyright © 2025 Leon Stansfield
+
 ## Resources
 
 Resources for any scene should be stored in the `resources` directory. For example, the resources directory may contain the following subdirectories:

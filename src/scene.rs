@@ -1,3 +1,4 @@
+// Copyright © 2025 Leon Stansfield
 
 pub trait Scene {
     fn update(&mut self);

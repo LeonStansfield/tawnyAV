@@ -1,3 +1,5 @@
+// Copyright © 2025 Leon Stansfield
+
 use crate::scene::Scene;
 use crate::scenes;
 

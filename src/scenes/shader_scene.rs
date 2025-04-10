@@ -1,3 +1,5 @@
+// Copyright © 2025 Leon Stansfield
+
 use macroquad::prelude::*;
 use macroquad::rand::gen_range;
 use std::fs::File;
