@@ -15,3 +15,6 @@ __pycache__
 # Added by cargo
 
 /target
+
+# TawnyAV specific
+/resources
