@@ -1,6 +1,6 @@
 // Copyright © 2025 Leon Stansfield
 
-use crate::globals::{BEAT_DETECTION_ENABLED, IMAGE_FILEPATH, SENSITIVITY};
+use crate::globals::{BEAT_DETECTION_ENABLED, IMAGE_FILEPATH, SENSITIVITY, AUDIO_INPUT_DEVICE, AVAILABLE_AUDIO_DEVICES};
 use crate::scene_manager::SceneManager;
 use macroquad::prelude::*;
 use macroquad::ui::{hash, root_ui, widgets::{self, ComboBox}};
@@ -37,7 +37,7 @@ impl UI {
 
         let mut reload_scenes = false;
         let window_width = 350.0;
-        let window_height = 300.0;
+        let window_height = 350.0;
 
         widgets::Window::new(hash!(), vec2(10.0, 10.0), vec2(window_width, window_height))
             .label("Settings")
@@ -45,23 +45,23 @@ impl UI {
             .movable(true)
             .ui(&mut *root_ui(), |ui| {
                 ui.label(None, "Scene Selection");
-            ui.separator();
-            if !scene_manager.scenes.is_empty() {
-                let scene_labels: Vec<String> = scene_manager.scenes
-                    .iter()
-                    .map(|scene| scene.get_name().to_string())
-                    .collect();
-                
-                let scene_label_slices: Vec<&str> = scene_labels.iter().map(|s| s.as_str()).collect();
-                let current_label = scene_labels.get(scene_manager.current_scene)
-                    .map_or("Select Scene", |s| s.as_str());
+                ui.separator();
+                if !scene_manager.scenes.is_empty() {
+                    let scene_labels: Vec<String> = scene_manager.scenes
+                        .iter()
+                        .map(|scene| scene.get_name().to_string())
+                        .collect();
 
-                ComboBox::new(hash!("scene_select"), &scene_label_slices)
-                    .label(current_label)
-                    .ui(ui, &mut scene_manager.current_scene);
-            } else {
-                ui.label(None, "No scenes loaded.");
-            }
+                    let scene_label_slices: Vec<&str> = scene_labels.iter().map(|s| s.as_str()).collect();
+                    let current_label = scene_labels.get(scene_manager.current_scene)
+                        .map_or("Select Scene", |s| s.as_str());
+
+                    ComboBox::new(hash!("scene_select"), &scene_label_slices)
+                        .label(current_label)
+                        .ui(ui, &mut scene_manager.current_scene);
+                } else {
+                    ui.label(None, "No scenes loaded.");
+                }
 
 
                 ui.separator();
@@ -91,7 +91,35 @@ impl UI {
                         self.last_known_global_filepath = current_global_filepath;
                     }
                 }
+
+                ui.separator();
                 
+                ui.label(None, "Audio Input Device:");
+
+                let mut available_devices_lock = AVAILABLE_AUDIO_DEVICES.lock().unwrap();
+                let available_devices: &mut Vec<String> = &mut available_devices_lock;
+
+                let device_slices: Vec<&str> = available_devices.iter().map(|s| s.as_str()).collect();
+
+                let current_device_name = AUDIO_INPUT_DEVICE.lock().unwrap().clone();
+                let mut current_index = available_devices
+                    .iter()
+                    .position(|device| *device == current_device_name)
+                    .unwrap_or(0);
+
+                let initial_index = current_index;
+
+                // Create the ComboBox for selecting the audio input device
+                ComboBox::new(hash!("audio_device_select"), &device_slices)
+                    .label(device_slices.get(current_index).unwrap_or(&""))
+                    .ui(ui, &mut current_index);
+
+                if current_index != initial_index {
+                    if let Some(selected_device) = available_devices.get(current_index) {
+                        *AUDIO_INPUT_DEVICE.lock().unwrap() = selected_device.clone();
+                    }
+                }
+
                 ui.separator();
 
                 if ui.button(None, "Reload Scene") {

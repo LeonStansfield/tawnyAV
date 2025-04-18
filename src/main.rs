@@ -24,6 +24,7 @@ async fn main() {
     let frame_duration = Duration::from_secs_f32(1.0 / 30.0);
 
     // Initialize audio processing
+    audio_processing::initialize_audio_devices();
     let _stream = audio_processing::initialize_audio();
 
     // Create scenes

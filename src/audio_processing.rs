@@ -12,10 +12,16 @@ pub fn initialize_audio() -> Arc<cpal::Stream> {
     // Initialize the CPAL host
     let host = cpal::default_host();
 
-    // Select the default input device (microphone)
-    let device = host
-        .default_input_device()
-        .expect("Failed to find input device");
+    // Get the selected audio input device
+    let selected_device_name = globals::AUDIO_INPUT_DEVICE.lock().unwrap().clone();
+    let device = if selected_device_name.is_empty() {
+        host.default_input_device().expect("Failed to find input device")
+    } else {
+        host.input_devices()
+            .expect("Failed to get input devices")
+            .find(|d| d.name().unwrap_or_default() == selected_device_name)
+            .expect("Selected input device not found")
+    };
 
     println!("Selected input device: {}", device.name().unwrap());
 
@@ -37,6 +43,27 @@ pub fn initialize_audio() -> Arc<cpal::Stream> {
 
     // Store the stream to keep it running
     Arc::new(stream)
+}
+
+pub fn initialize_audio_devices() {
+    let host = cpal::default_host();
+    let devices = host.input_devices().expect("Failed to get input devices");
+
+    let mut available_devices = globals::AVAILABLE_AUDIO_DEVICES.lock().unwrap();
+    available_devices.clear();
+
+    for device in devices {
+        if let Ok(name) = device.name() {
+            available_devices.push(name);
+        }
+    }
+
+    if available_devices.is_empty() {
+        eprintln!("No audio input devices found.");
+    } else {
+        // Set the default device as the selected device
+        *globals::AUDIO_INPUT_DEVICE.lock().unwrap() = available_devices[0].clone();
+    }
 }
 
 fn run_stream<T>(

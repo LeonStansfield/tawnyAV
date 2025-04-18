@@ -11,6 +11,8 @@ lazy_static! {
     pub static ref RENDER_WIDTH: Mutex<f32> = Mutex::new(1920.0);
     pub static ref RENDER_HEIGHT: Mutex<f32> = Mutex::new(1080.0);
     pub static ref IS_FULLSCREEN: Mutex<bool> = Mutex::new(false);
+    pub static ref AUDIO_INPUT_DEVICE: Mutex<String> = Mutex::new(String::new());
+    pub static ref AVAILABLE_AUDIO_DEVICES: Mutex<Vec<String>> = Mutex::new(Vec::new());
     pub static ref BEAT_DETECTION_ENABLED: Mutex<bool> = Mutex::new(true);
     pub static ref BEAT_DETECTED: Mutex<bool> = Mutex::new(false);
     pub static ref SENSITIVITY: Mutex<f32> = Mutex::new(1.5);
